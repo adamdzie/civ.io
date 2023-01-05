@@ -2,6 +2,7 @@ import { Player } from "./player.js";
 import { Grid } from "./Grid.js";
 import { Storage } from "./storage.js";
 import { InputManager } from "./InputManager.js";
+import { UI } from "./Ui.js";
 
 export const socket = io("http://localhost:3000");
 
@@ -9,13 +10,15 @@ export let storage = new Storage();
 let inputManager = new InputManager();
 export var socket_id = "";
 let map;
+let ui;
+let initiated = false;
 
 socket.on("connect", () => {});
 
-socket.on("initialize", (players, _socketId, grid) => {
+socket.on("initialize", async (players, _socketId, grid) => {
   socket_id = _socketId;
 
-  map = new Grid(
+  map = await new Grid(
     grid.width,
     grid.height,
     grid.edgeLength,
@@ -24,8 +27,10 @@ socket.on("initialize", (players, _socketId, grid) => {
   );
 
   for (var key in players) {
-    storage.Add(key, players[key]);
+    await storage.Add(key, players[key]);
   }
+  ui = await new UI();
+  initiated = true;
 });
 
 socket.on("add_player", (id, player) => {
@@ -33,8 +38,6 @@ socket.on("add_player", (id, player) => {
 });
 
 socket.on("movement", (id, time, position) => {
-  //console.log("its time: ", time);
-  //console.log("date now: ", Date.now());
   storage.PlayerList[id].HandleNewTick({
     time: time,
     x: position.x,
@@ -43,7 +46,8 @@ socket.on("movement", (id, time, position) => {
 });
 
 socket.on("hero_rotation", (id, time, rotation) => {
-  console.log("TO CZAS:" + time + "A TO ANGLE: " + rotation);
+  //console.log("TO CZAS:" + time + "A TO ANGLE: " + rotation);
+  if (!initiated) return;
   storage.PlayerList[id].HandleNewRotationTick({
     time: time,
     angle: rotation,
@@ -85,7 +89,7 @@ const cull = new PIXI.Cull().addAll(app.stage.children);
 app.ticker.add((delta) => loop(delta));
 
 function loop(delta) {
-  if (socket_id === "") return;
+  if (socket_id === "" || !initiated) return;
 
   for (var key in storage.PlayerList) {
     storage.PlayerList[key].update(app.ticker.deltaMS);
@@ -93,5 +97,8 @@ function loop(delta) {
 
   app.stage.pivot.x = storage.PlayerList[socket_id].sprite.x;
   app.stage.pivot.y = storage.PlayerList[socket_id].sprite.y;
+
+  if (ui) ui.update();
+
   cull.cull(app.renderer.screen);
 }

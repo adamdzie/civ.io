@@ -24,6 +24,9 @@ export class Interpolator {
 
     this.rotationThreshold = 0.2;
     this.timeAddRotation = 16;
+
+    this.highest = 0;
+    this.lowest = 0;
   }
 
   UpdateInterpolator(delta) {
@@ -127,12 +130,31 @@ export class Interpolator {
       return;
     }
 
+    if (Math.abs(this.currentRotation.angle - this.pastRotation.angle) > 5) {
+      if (this.pastRotation.angle < 0) {
+        let temp = Math.PI - Math.abs(this.pastRotation.angle);
+        let sum = Math.PI - this.currentRotation.angle;
+        sum += temp;
+        this.pastRotation.angle = this.currentRotation.angle + sum;
+      } else {
+        let temp = Math.PI - this.pastRotation.angle;
+        let sum = Math.PI - Math.abs(this.currentRotation.angle);
+        sum += temp;
+        this.pastRotation.angle = this.currentRotation.angle - sum;
+      }
+      //this.pastRotation.angle *= -1;
+    }
+
     let rotation =
       ((this.currentRotation.angle - this.pastRotation.angle) *
         this.elapsedTimeRotation) /
         (this.currentRotation.time - this.pastRotation.time) +
       this.pastRotation.angle;
-
     this.currentAngle = rotation;
+
+    // if (this.currentAngle < this.lowest) this.lowest = this.currentAngle;
+    // if (this.currentAngle > this.highest) this.highest = this.currentAngle;
+    // console.log("TOP: " + this.highest);
+    // console.log("LOW: " + this.lowest);
   }
 }

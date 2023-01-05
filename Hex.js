@@ -76,7 +76,7 @@ export class Hex {
 
     this.container.x = this.position.x;
     this.container.y = this.position.y;
-    console.log(this.container.width);
+
     app.stage.addChild(this.container);
     app.stage.addChild(this.tempgraph);
   }
