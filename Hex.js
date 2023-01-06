@@ -1,4 +1,4 @@
-import { app, Graphics, Text, Container, Sprite } from "./app.js";
+import { app, Graphics, Text, Container, Sprite, resources } from "./app.js";
 
 export class Hex {
   constructor(
@@ -37,15 +37,15 @@ export class Hex {
     this.terrainResource = terrainResource;
 
     if (this.terrainType === "snow") {
-      this.hex = PIXI.Texture.from("./Sprites/Hex/HEX_SNOW.png");
+      this.hex = PIXI.Texture.from("./Assets/Hex/HEX_SNOW.png");
     } else if (this.terrainType === "grass") {
-      this.hex = PIXI.Texture.from("./Sprites/Hex/HEX_GRASS.png");
+      this.hex = PIXI.Texture.from("./Assets/Hex/HEX_GRASS.png");
     } else if (this.terrainType === "ocean") {
-      this.hex = PIXI.Texture.from("./Sprites/Hex/HEX_OCEAN.png");
+      this.hex = PIXI.Texture.from("./Assets/Hex/HEX_OCEAN.png");
     } else if (this.terrainType === "lake") {
-      this.hex = PIXI.Texture.from("./Sprites/Hex/HEX_LAKE.png");
+      this.hex = PIXI.Texture.from("./Assets/Hex/HEX_LAKE.png");
     } else if (this.terrainType === "mountain") {
-      this.hex = PIXI.Texture.from("./Sprites/Hex/HEX_MOUNTAIN.png");
+      this.hex = PIXI.Texture.from("./Assets/Hex/HEX_MOUNTAIN.png");
     }
     this.container = new Container();
 
@@ -61,23 +61,34 @@ export class Hex {
       });
     }
 
-    //var texture = app.renderer.generateTexture(this.hex);
-    //const texture = PIXI.Texture.from("./Sprites/HEX_GRASS.png");
     this.sprite = new PIXI.Sprite(this.hex);
 
-    this.resourceText.x = 141;
     this.sprite.x = 0;
-
     this.sprite.y = 0;
+
+    //CREATE RESOURCE SPRITE
+
+    this.resource_sprite = "none";
+
+    if (this.terrainResource !== "none") {
+      this.resource_sprite = new PIXI.Sprite(
+        resources.assets[this.terrainResource]
+      );
+    }
+
+    this.resource_sprite.anchor.x = -2.5;
+    this.resource_sprite.anchor.y = -3.0;
 
     this.container.addChild(this.sprite);
 
-    this.container.addChild(this.resourceText);
+    if (this.resource_sprite !== "none")
+      this.container.addChild(this.resource_sprite);
 
     this.container.x = this.position.x;
     this.container.y = this.position.y;
 
     app.stage.addChild(this.container);
     app.stage.addChild(this.tempgraph);
+    //console.log(this.container.width);
   }
 }

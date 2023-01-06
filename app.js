@@ -3,11 +3,13 @@ import { Grid } from "./Grid.js";
 import { Storage } from "./storage.js";
 import { InputManager } from "./InputManager.js";
 import { UI } from "./Ui.js";
+import { Resources } from "./Resources.js";
 
 export const socket = io("http://localhost:3000");
 
 export let storage = new Storage();
 let inputManager = new InputManager();
+export let resources = new Resources();
 export var socket_id = "";
 let map;
 let ui;

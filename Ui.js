@@ -1,4 +1,4 @@
-import { app, socket, socket_id, storage } from "./app.js";
+import { app, socket, socket_id, storage, resources } from "./app.js";
 
 export class UI {
   constructor() {
@@ -16,70 +16,162 @@ export class UI {
     this.resources_box.anchor.x = 0;
     this.resources_box.anchor.y = 0;
 
-    //CREATE SCIENCE ICON
-
-    const UI_SCIENCE = new PIXI.Graphics();
-    UI_SCIENCE.beginFill(0x000000, 1).drawRect(0, 0, 24, 24).endFill();
-
-    const science_texture = app.renderer.generateTexture(UI_SCIENCE);
-    this.science_icon = new PIXI.Sprite(science_texture);
-
-    this.science_icon.x = 0;
-    this.science_icon.y = 0;
-
-    // this.science_icon.pivot.x = 0;
-    // this.science_icon.pivot.y = 0;
-
-    this.science_icon.anchor.x = -0.1;
-    this.science_icon.anchor.y = -0.1;
-
     //CREATE GOLD ICON
 
-    const UI_GOLD = new PIXI.Graphics();
-    UI_GOLD.beginFill(0x000000, 1).drawRect(0, 0, 24, 24).endFill();
+    this.gold_icon = new PIXI.Sprite(resources.assets["Icon_gold"]);
 
-    const gold_texture = app.renderer.generateTexture(UI_GOLD);
-    this.gold_icon = new PIXI.Sprite(gold_texture);
-
-    this.gold_icon.x = 0;
-    this.gold_icon.y = 0;
-
-    this.gold_icon.anchor.x = -4;
+    this.gold_icon.anchor.x = -0.1;
     this.gold_icon.anchor.y = -0.1;
+
+    //CREATE SCIENCE ICON
+
+    this.science_icon = new PIXI.Sprite(resources.assets["Icon_science"]);
+
+    this.science_icon.anchor.x = -4.4;
+    this.science_icon.anchor.y = -0.1;
 
     //CREATE POPULATION ICON
 
-    const UI_POPULATION = new PIXI.Graphics();
-    UI_POPULATION.beginFill(0x000000, 1).drawRect(0, 0, 24, 24).endFill();
+    this.population_icon = new PIXI.Sprite(resources.assets["Icon_people"]);
 
-    const population_texture = app.renderer.generateTexture(UI_POPULATION);
-    this.population_icon = new PIXI.Sprite(population_texture);
-
-    this.population_icon.x = 0;
-    this.population_icon.y = 0;
-
-    this.population_icon.anchor.x = -8;
+    this.population_icon.anchor.x = -8.4;
     this.population_icon.anchor.y = -0.1;
 
     //CREATE AMENITIES ICON
+    this.amenities_icon = new PIXI.Sprite(resources.assets["Icon_mask"]);
 
-    const UI_AMENITIES = new PIXI.Graphics();
-    UI_AMENITIES.beginFill(0x000000, 1).drawRect(0, 0, 24, 24).endFill();
-
-    const amenities_texture = app.renderer.generateTexture(UI_AMENITIES);
-    this.amenities_icon = new PIXI.Sprite(amenities_texture);
-
-    this.amenities_icon.x = 0;
-    this.amenities_icon.y = 0;
-
-    this.amenities_icon.anchor.x = -12;
+    this.amenities_icon.anchor.x = -12.4;
     this.amenities_icon.anchor.y = -0.1;
 
+    //TEXT FOR RESOURCES
+
+    //GOLD QUANTITY
+
+    this.gold_quantity = new PIXI.Text("21", {
+      fill: 0xffd700,
+      fontSize: 17,
+      fontWeight: "bold",
+      stroke: "black",
+      strokeThickness: 2.5,
+      letterSpacing: 1,
+    });
+
+    this.gold_quantity.x = 30;
+    this.gold_quantity.y = 4;
+
+    //GOLD INCOME
+
+    this.gold_income = new PIXI.Text("+5", {
+      fill: 0x999999,
+      fontSize: 14,
+      fontWeight: "bold",
+      stroke: "black",
+      strokeThickness: 2.5,
+      letterSpacing: 1,
+    });
+
+    this.gold_income.x = 30 + this.gold_quantity.text.length * 12;
+    this.gold_income.y = 0;
+
+    //SCIENCE QUANTITY
+
+    this.science_quantity = new PIXI.Text("321", {
+      fill: 0x4392d2,
+      fontSize: 17,
+      fontWeight: "bold",
+      stroke: "black",
+      strokeThickness: 2.5,
+      letterSpacing: 1,
+    });
+
+    this.science_quantity.x = 133;
+    this.science_quantity.y = 4;
+
+    //SCIENCE INCOME
+
+    this.science_income = new PIXI.Text("+4", {
+      fill: 0x999999,
+      fontSize: 14,
+      fontWeight: "bold",
+      stroke: "black",
+      strokeThickness: 2.5,
+      letterSpacing: 1,
+    });
+
+    this.science_income.x = 133 + this.science_quantity.text.length * 12;
+    this.science_income.y = 0;
+
+    //POPULATION QUANTITY
+
+    this.population_quantity = new PIXI.Text("5k", {
+      fill: 0x36a800,
+      fontSize: 17,
+      fontWeight: "bold",
+      stroke: "black",
+      strokeThickness: 2.5,
+      letterSpacing: 1,
+    });
+
+    this.population_quantity.x = 229;
+    this.population_quantity.y = 4;
+
+    //POPULATION INCOME
+
+    this.population_income = new PIXI.Text("+1k", {
+      fill: 0x999999,
+      fontSize: 14,
+      fontWeight: "bold",
+      stroke: "black",
+      strokeThickness: 2.5,
+      letterSpacing: 1,
+    });
+
+    this.population_income.x = 229 + this.population_quantity.text.length * 12;
+    this.population_income.y = 0;
+
+    //AMENITIES QUANTITY
+
+    this.amenities_quantity = new PIXI.Text("0", {
+      fill: 0xd0d0d0,
+      fontSize: 17,
+      fontWeight: "bold",
+      stroke: "black",
+      strokeThickness: 2.5,
+      letterSpacing: 1,
+    });
+
+    this.amenities_quantity.x = 327;
+    this.amenities_quantity.y = 4;
+
+    //AMENITIES INCOME
+
+    this.amenities_income = new PIXI.Text("+0", {
+      fill: 0x999999,
+      fontSize: 14,
+      fontWeight: "bold",
+      stroke: "black",
+      strokeThickness: 2.5,
+      letterSpacing: 1,
+    });
+
+    this.amenities_income.x = 327 + this.amenities_quantity.text.length * 12;
+    this.amenities_income.y = 0;
+
+    //BUILDING CONTAINERS
+
     this.resources_container.addChild(this.resources_box);
-    this.resources_container.addChild(this.science_icon);
     this.resources_container.addChild(this.gold_icon);
+    this.resources_container.addChild(this.gold_quantity);
+    this.resources_container.addChild(this.gold_income);
+    this.resources_container.addChild(this.science_icon);
+    this.resources_container.addChild(this.science_quantity);
+    this.resources_container.addChild(this.science_income);
     this.resources_container.addChild(this.population_icon);
+    this.resources_container.addChild(this.population_quantity);
+    this.resources_container.addChild(this.population_income);
     this.resources_container.addChild(this.amenities_icon);
+    this.resources_container.addChild(this.amenities_quantity);
+    this.resources_container.addChild(this.amenities_income);
 
     app.stage.addChild(this.resources_container);
   }
@@ -87,5 +179,6 @@ export class UI {
     this.resources_container.x = app.stage.pivot.x - app.renderer.width / 2 + 5;
     this.resources_container.y =
       app.stage.pivot.y - app.renderer.height / 2 + 5;
+    //this.resources_container.scale.x = this.resources_container.scale.y = 0.5;
   }
 }

@@ -30,6 +30,7 @@ define("GRASS_RESOURCE", [
   "Hemp",
   "Wheat",
   "Salt",
+  "Tomato",
 ]);
 
 //WATER RESOURCES

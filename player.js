@@ -16,7 +16,7 @@ export class Player extends Interpolator {
       .drawCircle(this.position.x, this.position.y, this.radius)
       .endFill();
 
-    var texture = PIXI.Texture.from("./Sprites/Player/Hero.png");
+    var texture = PIXI.Texture.from("./Assets/Player/Hero.png");
 
     this.cont = new PIXI.Container();
 
