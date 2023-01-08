@@ -8,11 +8,11 @@ import { Resources } from "./Resources.js";
 export const socket = io("http://localhost:3000");
 
 export let storage = new Storage();
-let inputManager = new InputManager();
+export let inputManager = new InputManager();
 export let resources = new Resources();
 export var socket_id = "";
 let map;
-let ui;
+export let ui;
 let initiated = false;
 
 socket.on("connect", () => {});

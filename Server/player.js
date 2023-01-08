@@ -22,6 +22,7 @@ class Player {
       this.isMoving = false;
       return;
     }
+    console.log(this.move_vector);
     this.position.x += this.move_vector.x * this.move_speed;
     this.position.y += this.move_vector.y * this.move_speed;
   }

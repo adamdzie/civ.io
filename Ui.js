@@ -1,53 +1,86 @@
-import { app, socket, socket_id, storage, resources } from "./app.js";
+import {
+  app,
+  socket,
+  socket_id,
+  storage,
+  resources,
+  inputManager,
+} from "./app.js";
 
 export class UI {
   constructor() {
+    this.active_slot = -1;
+    this.icon_offset = 15;
+    //CREATE CONTAINERS
+
+    this.main_container = new PIXI.Container();
+    this.main_container.x = 0;
+    this.main_container.y = 0;
+
     this.resources_container = new PIXI.Container();
+    this.resources_container.x = 5;
+    this.resources_container.y = 5;
+
+    this.mode_container = new PIXI.Container();
+
+    this.mode_container.x = 10;
+    this.mode_container.y = 860;
+
+    this.combat_container = new PIXI.Container();
+
+    this.combat_container.x = 100;
+    this.combat_container.y = 860;
+
+    this.build_container = new PIXI.Container();
+
+    this.build_container.x = 100;
+    this.build_container.y = 860;
+
+    this.build_container.visible = false;
+
     //CREATE RESOURCES BOX
 
     const UI_RESOURCES = new PIXI.Graphics();
-    UI_RESOURCES.beginFill(0x000000, 0.1).drawRect(0, 0, 400, 30).endFill();
+    UI_RESOURCES.beginFill(0x000000, 0.1).drawRect(0, 0, 410, 30).endFill();
 
     const resource_texture = app.renderer.generateTexture(UI_RESOURCES);
     this.resources_box = new PIXI.Sprite(resource_texture);
 
     this.resources_box.x = 0;
     this.resources_box.y = 0;
-    this.resources_box.anchor.x = 0;
-    this.resources_box.anchor.y = 0;
 
     //CREATE GOLD ICON
 
     this.gold_icon = new PIXI.Sprite(resources.assets["Icon_gold"]);
 
-    this.gold_icon.anchor.x = -0.1;
-    this.gold_icon.anchor.y = -0.1;
+    this.gold_icon.x = 5;
+    this.gold_icon.y = 4;
 
     //CREATE SCIENCE ICON
 
     this.science_icon = new PIXI.Sprite(resources.assets["Icon_science"]);
 
-    this.science_icon.anchor.x = -4.4;
-    this.science_icon.anchor.y = -0.1;
+    this.science_icon.x = 120;
+    this.science_icon.y = 3;
 
     //CREATE POPULATION ICON
 
     this.population_icon = new PIXI.Sprite(resources.assets["Icon_people"]);
 
-    this.population_icon.anchor.x = -8.4;
-    this.population_icon.anchor.y = -0.1;
+    this.population_icon.x = 235;
+    this.population_icon.y = 3;
 
     //CREATE AMENITIES ICON
     this.amenities_icon = new PIXI.Sprite(resources.assets["Icon_mask"]);
 
-    this.amenities_icon.anchor.x = -12.4;
-    this.amenities_icon.anchor.y = -0.1;
+    this.amenities_icon.x = 350;
+    this.amenities_icon.y = 4;
 
     //TEXT FOR RESOURCES
 
     //GOLD QUANTITY
 
-    this.gold_quantity = new PIXI.Text("21", {
+    this.gold_quantity = new PIXI.Text("999k", {
       fill: 0xffd700,
       fontSize: 17,
       fontWeight: "bold",
@@ -56,12 +89,12 @@ export class UI {
       letterSpacing: 1,
     });
 
-    this.gold_quantity.x = 30;
+    this.gold_quantity.x = 32;
     this.gold_quantity.y = 4;
 
     //GOLD INCOME
 
-    this.gold_income = new PIXI.Text("+5", {
+    this.gold_income = new PIXI.Text("+999k", {
       fill: 0x999999,
       fontSize: 14,
       fontWeight: "bold",
@@ -70,12 +103,12 @@ export class UI {
       letterSpacing: 1,
     });
 
-    this.gold_income.x = 30 + this.gold_quantity.text.length * 12;
+    this.gold_income.x = this.gold_quantity.x + this.gold_quantity.width;
     this.gold_income.y = 0;
 
     //SCIENCE QUANTITY
 
-    this.science_quantity = new PIXI.Text("321", {
+    this.science_quantity = new PIXI.Text("999k", {
       fill: 0x4392d2,
       fontSize: 17,
       fontWeight: "bold",
@@ -84,12 +117,12 @@ export class UI {
       letterSpacing: 1,
     });
 
-    this.science_quantity.x = 133;
+    this.science_quantity.x = 146;
     this.science_quantity.y = 4;
 
     //SCIENCE INCOME
 
-    this.science_income = new PIXI.Text("+4", {
+    this.science_income = new PIXI.Text("+999k", {
       fill: 0x999999,
       fontSize: 14,
       fontWeight: "bold",
@@ -98,12 +131,13 @@ export class UI {
       letterSpacing: 1,
     });
 
-    this.science_income.x = 133 + this.science_quantity.text.length * 12;
+    this.science_income.x =
+      this.science_quantity.x + this.science_quantity.width;
     this.science_income.y = 0;
 
     //POPULATION QUANTITY
 
-    this.population_quantity = new PIXI.Text("5k", {
+    this.population_quantity = new PIXI.Text("999k", {
       fill: 0x36a800,
       fontSize: 17,
       fontWeight: "bold",
@@ -112,12 +146,12 @@ export class UI {
       letterSpacing: 1,
     });
 
-    this.population_quantity.x = 229;
+    this.population_quantity.x = 260;
     this.population_quantity.y = 4;
 
     //POPULATION INCOME
 
-    this.population_income = new PIXI.Text("+1k", {
+    this.population_income = new PIXI.Text("+999k", {
       fill: 0x999999,
       fontSize: 14,
       fontWeight: "bold",
@@ -126,12 +160,13 @@ export class UI {
       letterSpacing: 1,
     });
 
-    this.population_income.x = 229 + this.population_quantity.text.length * 12;
+    this.population_income.x =
+      this.population_quantity.x + this.population_quantity.width;
     this.population_income.y = 0;
 
     //AMENITIES QUANTITY
 
-    this.amenities_quantity = new PIXI.Text("0", {
+    this.amenities_quantity = new PIXI.Text("999", {
       fill: 0xd0d0d0,
       fontSize: 17,
       fontWeight: "bold",
@@ -140,24 +175,97 @@ export class UI {
       letterSpacing: 1,
     });
 
-    this.amenities_quantity.x = 327;
+    this.amenities_quantity.x = 375;
     this.amenities_quantity.y = 4;
 
-    //AMENITIES INCOME
+    //MODE BACKGROUND
 
-    this.amenities_income = new PIXI.Text("+0", {
-      fill: 0x999999,
-      fontSize: 14,
-      fontWeight: "bold",
-      stroke: "black",
-      strokeThickness: 2.5,
-      letterSpacing: 1,
-    });
+    let grap = new PIXI.Graphics();
+    grap.beginFill(0x000000, 0.1).drawRect(0, 0, 60, 60).endFill();
 
-    this.amenities_income.x = 327 + this.amenities_quantity.text.length * 12;
-    this.amenities_income.y = 0;
+    let texty = app.renderer.generateTexture(grap);
+    this.mode_background = new PIXI.Sprite(texty);
 
-    //BUILDING CONTAINERS
+    this.mode_background.x = 0;
+    this.mode_background.y = 0;
+
+    //COMBAT MODE
+
+    let grap_1 = new PIXI.Graphics();
+    grap_1.beginFill(0x78072f, 1).drawRect(0, 0, 50, 50).endFill();
+
+    let texty_1 = app.renderer.generateTexture(grap_1);
+    this.mode_combat = new PIXI.Sprite(texty_1);
+
+    this.mode_combat.x = 5;
+    this.mode_combat.y = 5;
+
+    this.mode_combat.interactive = true;
+
+    //BUILDING MODE
+
+    let grap_2 = new PIXI.Graphics();
+    grap_2.beginFill(0x073a78, 1).drawRect(0, 0, 50, 50).endFill();
+
+    let texty_2 = app.renderer.generateTexture(grap_2);
+    this.mode_build = new PIXI.Sprite(texty_2);
+
+    this.mode_build.x = 5;
+    this.mode_build.y = 5;
+
+    this.mode_build.interactive = true;
+
+    this.mode_build.visible = false;
+
+    //INTERACTIVE MODES
+
+    this.mode_combat.on("pointerdown", () => this.SwitchMode());
+
+    this.mode_build.on("pointerdown", () => this.SwitchMode());
+
+    //MODE CONTAINERS
+
+    let grap_3 = new PIXI.Graphics();
+    grap_3.beginFill(0x000000, 0.1).drawRect(0, 0, 60, 60).endFill();
+
+    let texty_3 = app.renderer.generateTexture(grap_3);
+
+    this.combat_slots = [];
+    this.combat_slots[0] = new PIXI.Sprite(texty_3);
+
+    this.combat_slots[1] = new PIXI.Sprite(texty_3);
+
+    this.combat_slots[1].x = 100;
+
+    this.combat_slots[2] = new PIXI.Sprite(texty_3);
+
+    this.combat_slots[2].x = 200;
+
+    this.build_slots = [];
+
+    this.build_slots[0] = new PIXI.Sprite(texty_3);
+
+    this.build_slots[1] = new PIXI.Sprite(texty_3);
+
+    this.build_slots[1].x = 100;
+
+    this.build_slots[2] = new PIXI.Sprite(texty_3);
+
+    this.build_slots[2].x = 200;
+
+    this.build_slots[3] = new PIXI.Sprite(texty_3);
+
+    this.build_slots[3].x = 300;
+
+    this.build_slots[4] = new PIXI.Sprite(texty_3);
+
+    this.build_slots[4].x = 400;
+
+    this.build_slots[5] = new PIXI.Sprite(texty_3);
+
+    this.build_slots[5].x = 500;
+
+    //FILL CONTAINERS
 
     this.resources_container.addChild(this.resources_box);
     this.resources_container.addChild(this.gold_icon);
@@ -171,14 +279,88 @@ export class UI {
     this.resources_container.addChild(this.population_income);
     this.resources_container.addChild(this.amenities_icon);
     this.resources_container.addChild(this.amenities_quantity);
-    this.resources_container.addChild(this.amenities_income);
 
-    app.stage.addChild(this.resources_container);
+    this.mode_container.addChild(this.mode_background);
+    this.mode_container.addChild(this.mode_combat);
+    this.mode_container.addChild(this.mode_build);
+
+    this.combat_container.addChild(this.combat_slots[0]);
+    this.combat_container.addChild(this.combat_slots[1]);
+    this.combat_container.addChild(this.combat_slots[2]);
+
+    this.build_container.addChild(this.build_slots[0]);
+    this.build_container.addChild(this.build_slots[1]);
+    this.build_container.addChild(this.build_slots[2]);
+    this.build_container.addChild(this.build_slots[3]);
+    this.build_container.addChild(this.build_slots[4]);
+    this.build_container.addChild(this.build_slots[5]);
+
+    this.main_container.addChild(this.resources_container);
+    this.main_container.addChild(this.mode_container);
+    this.main_container.addChild(this.combat_container);
+    this.main_container.addChild(this.build_container);
+
+    app.stage.addChild(this.main_container);
   }
   update() {
-    this.resources_container.x = app.stage.pivot.x - app.renderer.width / 2 + 5;
-    this.resources_container.y =
-      app.stage.pivot.y - app.renderer.height / 2 + 5;
+    this.main_container.x = app.stage.pivot.x - app.renderer.width / 2;
+    this.main_container.y = app.stage.pivot.y - app.renderer.height / 2;
+    // this.resources_container.x = app.stage.pivot.x - app.renderer.width / 2 + 0;
+    // this.resources_container.y =
+    //   app.stage.pivot.y - app.renderer.height / 2 + 0;
     //this.resources_container.scale.x = this.resources_container.scale.y = 0.5;
+  }
+  SwitchMode() {
+    this.mode_build.visible = !this.mode_build.visible;
+    this.build_container.visible = !this.build_container.visible;
+    this.combat_container.visible = !this.combat_container.visible;
+
+    if (this.active_slot !== -1) {
+      if (inputManager.mode) {
+        if (typeof this.combat_slots[this.active_slot] !== "undefined") {
+          this.combat_slots[this.active_slot].y += this.icon_offset;
+        }
+      } else {
+        if (typeof this.build_slots[this.active_slot] !== "undefined") {
+          this.build_slots[this.active_slot].y += this.icon_offset;
+        }
+      }
+    }
+
+    this.active_slot = -1;
+    inputManager.SwitchMode();
+  }
+  SelectSlot(index, mode) {
+    console.log(mode);
+    if (!mode) {
+      if (this.active_slot === index) {
+        this.build_slots[this.active_slot].y += this.icon_offset;
+        this.active_slot = -1;
+        return;
+      }
+
+      if (typeof this.build_slots[index] !== "undefined") {
+        if (!(this.active_slot === -1)) {
+          this.build_slots[this.active_slot].y += this.icon_offset;
+        }
+        this.active_slot = index;
+        this.build_slots[this.active_slot].y -= this.icon_offset;
+      }
+    } else {
+      console.log("here");
+      if (this.active_slot === index) {
+        this.combat_slots[this.active_slot].y += this.icon_offset;
+        this.active_slot = -1;
+        return;
+      }
+
+      if (typeof this.combat_slots[index] !== "undefined") {
+        if (!(this.active_slot === -1)) {
+          this.combat_slots[this.active_slot].y += this.icon_offset;
+        }
+        this.active_slot = index;
+        this.combat_slots[this.active_slot].y -= this.icon_offset;
+      }
+    }
   }
 }

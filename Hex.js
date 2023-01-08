@@ -87,6 +87,27 @@ export class Hex {
     this.container.x = this.position.x;
     this.container.y = this.position.y;
 
+    this.temppoints = [
+      this.points[0].x + 10,
+      this.points[1],
+      this.points[2],
+      this.points[3] + 10,
+      this.points[4],
+      this.points[5] + 10,
+      this.points[6] - 10,
+      this.points[7],
+      this.points[8],
+      this.points[9] - 10,
+      this.points[10],
+      this.points[11] - 10,
+    ];
+
+    //this.container.interactive = true;
+    //this.container.hitArea = new PIXI.Polygon(this.temppoints);
+    // this.container.on("mouseover", () => {
+    //   console.log(position);
+    // });
+    console.log("Pos: " + this.container.x + "," + this.container.y);
     app.stage.addChild(this.container);
     app.stage.addChild(this.tempgraph);
     //console.log(this.container.width);

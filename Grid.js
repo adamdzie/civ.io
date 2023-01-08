@@ -12,6 +12,11 @@ export class Grid {
 
     for (let i = 0; i < this.width; i++) {
       for (let j = 0; j < this.height; j++) {
+        // if (j < 3) {
+        //   console.log("Cord: " + i + "," + j);
+        //   console.log(map[[i, j]].points);
+        // }
+
         this.map[[i, j]] = new Hex(
           map[[i, j]].position,
           map[[i, j]].edgeLength,
