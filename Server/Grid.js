@@ -19,32 +19,46 @@ class Grid {
 
     let isOdd = false;
 
+    // for (let i = 0; i < this.width; i++) {
+    //   if (isOffset) offset = this.h;
+    //   else offset = 0;
+
+    //   for (let j = 0; j < this.height; j++) {
+    //     // if (i > 0) {
+    //     this.map[[i, j]] = new Hex(
+    //       {
+    //         //x: i * this.edgeLength * 1.5 - 2 * i,
+    //         x: i * this.edgeLength * 1.5 - i,
+    //         y: j * this.h * 2 + offset,
+    //       },
+    //       this.edgeLength,
+    //       this.borderWidth,
+    //       { x: i, y: j }
+    //     );
+    //   }
+    //   isOffset = !isOffset;
+    // }
+
     for (let i = 0; i < this.width; i++) {
       if (isOffset) offset = this.h;
       else offset = 0;
 
       for (let j = 0; j < this.height; j++) {
-        if (i > 0) {
-          this.map[[i, j]] = new Hex(
-            {
-              x: i * this.edgeLength * 1.5 - 2 * i,
-              y: j * this.h * 2 + offset,
-            },
-            this.edgeLength,
-            this.borderWidth,
-            { x: i, y: j }
-          );
-        } else {
-          this.map[[i, j]] = new Hex(
-            {
-              x: i * this.edgeLength * 1.5,
-              y: j * this.h * 2 + offset,
-            },
-            this.edgeLength,
-            this.borderWidth,
-            { x: i, y: j }
+        if (j < 3) {
+          console.log(
+            "POS: " + i * this.edgeLength * 1.5 + ";" + j * this.h * 2 + offset
           );
         }
+        this.map[[i, j]] = new Hex(
+          {
+            //x: i * this.edgeLength * 1.5 - 2 * i,
+            x: i * this.edgeLength * 1.5,
+            y: j * this.h * 2 + offset,
+          },
+          this.edgeLength,
+          this.borderWidth,
+          { x: i, y: j }
+        );
       }
       isOffset = !isOffset;
     }
@@ -128,7 +142,7 @@ class Grid {
       );
 
       this.map[[random_ocean_x, random_ocean_y]].terrainType = "ocean";
-      console.log(random_ocean_x + " " + random_ocean_y);
+      //console.log(random_ocean_x + " " + random_ocean_y);
 
       let ocean_scalar = Functions.getRandomInteger(100, 120);
       while (ocean_scalar > 0) {

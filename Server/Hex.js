@@ -9,19 +9,33 @@ class Hex {
     this.borderWidth = borderWidth;
     this.h = (this.edgeLength * Math.sqrt(3)) / 2;
 
+    // this.points = [
+    //   this.position.x - this.edgeLength,
+    //   this.position.y,
+    //   this.position.x - this.edgeLength / 2,
+    //   this.position.y - this.h,
+    //   this.position.x + this.edgeLength / 2,
+    //   this.position.y - this.h,
+    //   this.position.x + this.edgeLength,
+    //   this.position.y,
+    //   this.position.x + this.edgeLength / 2,
+    //   this.position.y + this.h,
+    //   this.position.x - this.edgeLength / 2,
+    //   this.position.y + this.h,
+    // ];
     this.points = [
-      this.position.x - this.edgeLength,
-      this.position.y,
-      this.position.x - this.edgeLength / 2,
-      this.position.y - this.h,
-      this.position.x + this.edgeLength / 2,
-      this.position.y - this.h,
-      this.position.x + this.edgeLength,
-      this.position.y,
-      this.position.x + this.edgeLength / 2,
+      this.position.x,
       this.position.y + this.h,
-      this.position.x - this.edgeLength / 2,
+      this.position.x + this.edgeLength / 2,
+      this.position.y,
+      this.position.x + this.edgeLength + this.edgeLength / 2,
+      this.position.y,
+      this.position.x + this.edgeLength * 2,
       this.position.y + this.h,
+      this.position.x + this.edgeLength + this.edgeLength / 2,
+      this.position.y + this.h * 2,
+      this.position.x + this.edgeLength / 2,
+      this.position.y + this.h * 2,
     ];
 
     this.neighbours = [];

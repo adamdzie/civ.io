@@ -24,8 +24,13 @@ export class Grid {
           map[[i, j]].points,
           map[[i, j]].terrainType,
           map[[i, j]].terrainObstacle,
-          map[[i, j]].terrainResource
+          map[[i, j]].terrainResource,
+          { x: i, y: j }
         );
+
+        // console.log(
+        //   "IN: " + i + "," + j + "  " + this.map[[i, j]].container.width
+        // );
       }
     }
   }

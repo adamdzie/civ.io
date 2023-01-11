@@ -1,3 +1,5 @@
+import { app, socket, socket_id, storage, ui, map } from "./app.js";
+
 export class Resources {
   constructor() {
     //LOAD RESOURCES
@@ -69,5 +71,16 @@ export class Resources {
 
     resource = PIXI.Texture.from("./Assets/Icons/ICON_MASK.png");
     this.assets["Icon_mask"] = resource;
+
+    let grap = new PIXI.Graphics();
+    grap
+      .beginFill(0x42b7df, 0.2)
+      .lineStyle(3, 0x000000, 0.2)
+      .drawRect(0, 0, 100, 100)
+      .endFill();
+
+    let texture = app.renderer.generateTexture(grap);
+
+    this.assets["City_temp"] = new PIXI.Sprite(texture);
   }
 }

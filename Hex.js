@@ -1,4 +1,12 @@
-import { app, Graphics, Text, Container, Sprite, resources } from "./app.js";
+import {
+  app,
+  Graphics,
+  Text,
+  Container,
+  Sprite,
+  resources,
+  inputManager,
+} from "./app.js";
 
 export class Hex {
   constructor(
@@ -8,19 +16,25 @@ export class Hex {
     points,
     terrainType,
     terrainObstacle,
-    terrainResource
+    terrainResource,
+    hexCord
   ) {
     this.position = position;
     this.edgeLength = edgeLength;
     this.borderWidth = borderWidth;
     this.h = (this.edgeLength * Math.sqrt(3)) / 2;
+    this.hexCord = hexCord;
 
     this.points = points;
-
-    for (let i = 0; i < this.points.length; i++) {
-      if (i % 2 === 0) this.points[i] += this.edgeLength;
-      else this.points[i] += this.h;
-    }
+    //var v = new SAT.Vector(10, 10);
+    this.collider = new SAT.Polygon(new SAT.Vector(0, 0), [
+      new SAT.Vector(this.points[0], this.points[1]),
+      new SAT.Vector(this.points[2], this.points[3]),
+      new SAT.Vector(this.points[4], this.points[5]),
+      new SAT.Vector(this.points[6], this.points[7]),
+      new SAT.Vector(this.points[8], this.points[9]),
+      new SAT.Vector(this.points[10], this.points[11]),
+    ]);
 
     this.tempgraph = new Graphics();
     this.tempgraph
@@ -62,7 +76,7 @@ export class Hex {
     }
 
     this.sprite = new PIXI.Sprite(this.hex);
-
+    this.sprite.width = 280;
     this.sprite.x = 0;
     this.sprite.y = 0;
 
@@ -87,29 +101,34 @@ export class Hex {
     this.container.x = this.position.x;
     this.container.y = this.position.y;
 
-    this.temppoints = [
-      this.points[0].x + 10,
-      this.points[1],
-      this.points[2],
-      this.points[3] + 10,
-      this.points[4],
-      this.points[5] + 10,
-      this.points[6] - 10,
-      this.points[7],
-      this.points[8],
-      this.points[9] - 10,
-      this.points[10],
-      this.points[11] - 10,
-    ];
+    this.container.interactive = true;
+    this.container.hitArea = new PIXI.Polygon([
+      0,
+      this.h,
+      this.edgeLength / 2,
+      0,
+      this.edgeLength + this.edgeLength / 2,
+      0,
+      this.edgeLength * 2,
+      this.h,
+      this.edgeLength + this.edgeLength / 2,
+      this.h * 2,
+      this.edgeLength / 2,
+      this.h * 2,
+    ]);
+    this.container.on("pointerdown", () => {
+      if (!inputManager.mode && inputManager.active_slot !== -1) {
+        console.log(this.position);
+      }
+    });
 
-    //this.container.interactive = true;
-    //this.container.hitArea = new PIXI.Polygon(this.temppoints);
-    // this.container.on("mouseover", () => {
-    //   console.log(position);
-    // });
-    console.log("Pos: " + this.container.x + "," + this.container.y);
+    // console.log("Pos: " + this.container.x + "," + this.container.y);
+    //console.log(this.container.position);
     app.stage.addChild(this.container);
     app.stage.addChild(this.tempgraph);
-    //console.log(this.container.width);
+    console.log(this.points);
+  }
+  IsCollide(point) {
+    return SAT.pointInPolygon(point, this.collider);
   }
 }

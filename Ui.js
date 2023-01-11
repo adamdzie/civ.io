@@ -330,8 +330,7 @@ export class UI {
     this.active_slot = -1;
     inputManager.SwitchMode();
   }
-  SelectSlot(index, mode) {
-    console.log(mode);
+  SelectSlot(index, mode, callback) {
     if (!mode) {
       if (this.active_slot === index) {
         this.build_slots[this.active_slot].y += this.icon_offset;
@@ -342,12 +341,13 @@ export class UI {
       if (typeof this.build_slots[index] !== "undefined") {
         if (!(this.active_slot === -1)) {
           this.build_slots[this.active_slot].y += this.icon_offset;
+          //Select slot callback
         }
         this.active_slot = index;
         this.build_slots[this.active_slot].y -= this.icon_offset;
+        callback(this.active_slot);
       }
     } else {
-      console.log("here");
       if (this.active_slot === index) {
         this.combat_slots[this.active_slot].y += this.icon_offset;
         this.active_slot = -1;
