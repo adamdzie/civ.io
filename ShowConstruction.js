@@ -1,11 +1,13 @@
-import { Graphics, Text, map, app, resources, Container } from "./app.js";
+import { Graphics, Text, app, Container } from "./app.js";
+import Resources from "./Resources.js";
 
-export class ShowConstruction {
-  constructor() {
+class ShowConstruction {
+  constructor() {}
+  initialize() {
     this.currentConstruction = "none";
 
     this.constructionAssets = {};
-    this.constructionAssets["City"] = resources.assets["City_temp"];
+    this.constructionAssets["City"] = Resources.assets["City_temp"];
     this.constructionAssets["City"].renderable = false;
 
     this.container = new PIXI.Container();
@@ -37,3 +39,7 @@ export class ShowConstruction {
     }
   }
 }
+
+const singletonInstance = new ShowConstruction();
+
+export default singletonInstance;

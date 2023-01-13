@@ -1,7 +1,8 @@
-import { app, socket, socket_id, storage, ui, map } from "./app.js";
+import { app, socket, socket_id } from "./app.js";
 
-export class Resources {
-  constructor() {
+class Resources {
+  constructor() {}
+  initialize() {
     //LOAD RESOURCES
 
     this.assets = {};
@@ -84,3 +85,7 @@ export class Resources {
     this.assets["City_temp"] = new PIXI.Sprite(texture);
   }
 }
+
+const singletonInstance = new Resources();
+
+export default singletonInstance;

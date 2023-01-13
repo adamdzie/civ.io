@@ -1,6 +1,6 @@
 import { Player } from "./player.js";
 
-export class Storage {
+class Storage {
   constructor() {
     this.PlayerList = new Object();
   }
@@ -22,3 +22,7 @@ export class Storage {
     return Object.keys(this.PlayerList).length;
   }
 }
+
+const singletonInstance = new Storage();
+
+export default singletonInstance;

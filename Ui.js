@@ -1,14 +1,14 @@
-import {
-  app,
-  socket,
-  socket_id,
-  storage,
-  resources,
-  inputManager,
-} from "./app.js";
+import { app, socket, socket_id } from "./app.js";
 
-export class UI {
+import InputManager from "./InputManager.js";
+import Resources from "./Resources.js";
+
+class UI {
   constructor() {
+    this.initialized = false;
+    this.mode_build;
+  }
+  initialize() {
     this.active_slot = -1;
     this.icon_offset = 15;
     //CREATE CONTAINERS
@@ -51,27 +51,27 @@ export class UI {
 
     //CREATE GOLD ICON
 
-    this.gold_icon = new PIXI.Sprite(resources.assets["Icon_gold"]);
+    this.gold_icon = new PIXI.Sprite(Resources.assets["Icon_gold"]);
 
     this.gold_icon.x = 5;
     this.gold_icon.y = 4;
 
     //CREATE SCIENCE ICON
 
-    this.science_icon = new PIXI.Sprite(resources.assets["Icon_science"]);
+    this.science_icon = new PIXI.Sprite(Resources.assets["Icon_science"]);
 
     this.science_icon.x = 120;
     this.science_icon.y = 3;
 
     //CREATE POPULATION ICON
 
-    this.population_icon = new PIXI.Sprite(resources.assets["Icon_people"]);
+    this.population_icon = new PIXI.Sprite(Resources.assets["Icon_people"]);
 
     this.population_icon.x = 235;
     this.population_icon.y = 3;
 
     //CREATE AMENITIES ICON
-    this.amenities_icon = new PIXI.Sprite(resources.assets["Icon_mask"]);
+    this.amenities_icon = new PIXI.Sprite(Resources.assets["Icon_mask"]);
 
     this.amenities_icon.x = 350;
     this.amenities_icon.y = 4;
@@ -301,22 +301,29 @@ export class UI {
     this.main_container.addChild(this.build_container);
 
     app.stage.addChild(this.main_container);
+
+    this.temporary = true;
+
+    this.initialized = true;
   }
   update() {
     this.main_container.x = app.stage.pivot.x - app.renderer.width / 2;
     this.main_container.y = app.stage.pivot.y - app.renderer.height / 2;
+
     // this.resources_container.x = app.stage.pivot.x - app.renderer.width / 2 + 0;
     // this.resources_container.y =
     //   app.stage.pivot.y - app.renderer.height / 2 + 0;
     //this.resources_container.scale.x = this.resources_container.scale.y = 0.5;
   }
   SwitchMode() {
+    this.temporary = !this.temporary;
+
     this.mode_build.visible = !this.mode_build.visible;
     this.build_container.visible = !this.build_container.visible;
     this.combat_container.visible = !this.combat_container.visible;
 
     if (this.active_slot !== -1) {
-      if (inputManager.mode) {
+      if (InputManager.mode) {
         if (typeof this.combat_slots[this.active_slot] !== "undefined") {
           this.combat_slots[this.active_slot].y += this.icon_offset;
         }
@@ -328,7 +335,7 @@ export class UI {
     }
 
     this.active_slot = -1;
-    inputManager.SwitchMode();
+    InputManager.SwitchMode();
   }
   SelectSlot(index, mode, OnCallback, OffCallback) {
     if (!mode) {
@@ -365,3 +372,7 @@ export class UI {
     }
   }
 }
+
+const singletonInstance = new UI();
+
+export default singletonInstance;

@@ -1,16 +1,15 @@
-import {
-  app,
-  socket,
-  socket_id,
-  storage,
-  ui,
-  map,
-  showConstruction,
-  inputManager,
-} from "./app.js";
+import { app, socket, socket_id } from "./app.js";
 
-export class InputManager {
+import Storage from "./storage.js";
+import UI from "./Ui.js";
+import ShowConstruction from "./ShowConstruction.js";
+import Grid from "./Grid.js";
+
+class InputManager {
   constructor() {
+    this.initialized = false;
+  }
+  initialize() {
     this.mouseMoving = false;
     this.mousePosition = { x: 0, y: 0 };
     this.mouseScreenPosition = { x: 0, y: 0 };
@@ -43,6 +42,7 @@ export class InputManager {
       Digit8: false,
       Digit9: false,
     };
+    this.initialized = true;
   }
   KeyPressed(e) {
     //MOVEMENT INPUT SECTION
@@ -65,7 +65,7 @@ export class InputManager {
     if (this.input.E === false) {
       if (e.code === "KeyE") {
         this.input.E = true;
-        ui.SwitchMode();
+        UI.SwitchMode();
       }
     }
 
@@ -74,7 +74,7 @@ export class InputManager {
     if (this.input.Digit1 === false) {
       if (e.code === "Digit1") {
         this.input.Digit1 = true;
-        ui.SelectSlot(
+        UI.SelectSlot(
           0,
           this.mode,
           this.PickSlotCallback,
@@ -85,7 +85,7 @@ export class InputManager {
     if (this.input.Digit2 === false) {
       if (e.code === "Digit2") {
         this.input.Digit2 = true;
-        ui.SelectSlot(
+        UI.SelectSlot(
           1,
           this.mode,
           this.PickSlotCallback,
@@ -96,7 +96,7 @@ export class InputManager {
     if (this.input.Digit3 === false) {
       if (e.code === "Digit3") {
         this.input.Digit3 = true;
-        ui.SelectSlot(
+        UI.SelectSlot(
           2,
           this.mode,
           this.PickSlotCallback,
@@ -107,7 +107,7 @@ export class InputManager {
     if (this.input.Digit4 === false) {
       if (e.code === "Digit4") {
         this.input.Digit4 = true;
-        ui.SelectSlot(
+        UI.SelectSlot(
           3,
           this.mode,
           this.PickSlotCallback,
@@ -118,7 +118,7 @@ export class InputManager {
     if (this.input.Digit5 === false) {
       if (e.code === "Digit5") {
         this.input.Digit5 = true;
-        ui.SelectSlot(
+        UI.SelectSlot(
           4,
           this.mode,
           this.PickSlotCallback,
@@ -129,7 +129,7 @@ export class InputManager {
     if (this.input.Digit6 === false) {
       if (e.code === "Digit6") {
         this.input.Digit6 = true;
-        ui.SelectSlot(
+        UI.SelectSlot(
           5,
           this.mode,
           this.PickSlotCallback,
@@ -140,7 +140,7 @@ export class InputManager {
     if (this.input.Digit7 === false) {
       if (e.code === "Digit7") {
         this.input.Digit7 = true;
-        ui.SelectSlot(
+        UI.SelectSlot(
           6,
           this.mode,
           this.PickSlotCallback,
@@ -151,7 +151,7 @@ export class InputManager {
     if (this.input.Digit8 === false) {
       if (e.code === "Digit8") {
         this.input.Digit8 = true;
-        ui.SelectSlot(
+        UI.SelectSlot(
           7,
           this.mode,
           this.PickSlotCallback,
@@ -162,7 +162,7 @@ export class InputManager {
     if (this.input.Digit9 === false) {
       if (e.code === "Digit9") {
         this.input.Digit9 = true;
-        ui.SelectSlot(
+        UI.SelectSlot(
           8,
           this.mode,
           this.PickSlotCallback,
@@ -249,8 +249,8 @@ export class InputManager {
   }
   GetWorldPoint(x, y) {
     return {
-      x: storage.PlayerList[socket_id].position.x - (app.stage.position.x - x),
-      y: storage.PlayerList[socket_id].position.y - (app.stage.position.y - y),
+      x: Storage.PlayerList[socket_id].position.x - (app.stage.position.x - x),
+      y: Storage.PlayerList[socket_id].position.y - (app.stage.position.y - y),
     };
   }
   SwitchMode() {
@@ -279,28 +279,32 @@ export class InputManager {
       for (let i = 0; i < 30; i++) {
         for (let j = 0; j < 30; j++) {
           if (
-            map.map[[i, j]].IsCollide(
+            Grid.map[[i, j]].IsCollide(
               new SAT.Vector(this.mousePosition.x, this.mousePosition.y)
             )
           )
-            this.selectedHex = map.map[[i, j]];
+            this.selectedHex = Grid.map[[i, j]];
         }
       }
     }
   }
   PickSlotCallback(active_slot) {
-    if (active_slot === 0) inputManager.showBuilding = "City";
-    inputManager.showMode = true;
+    if (active_slot === 0) singletonInstance.showBuilding = "City";
+    singletonInstance.showMode = true;
   }
   UnpickSlotCallback() {
-    inputManager.showMode = false;
-    showConstruction.DisableShow();
+    singletonInstance.showMode = false;
+    ShowConstruction.DisableShow();
   }
   ShowMode() {
     this.SelectHex();
-    showConstruction.Show(this.showBuilding, {
-      x: this.selectedHex.container.position.x + map.edgeLength,
-      y: this.selectedHex.container.position.y + map.h,
+    ShowConstruction.Show(this.showBuilding, {
+      x: this.selectedHex.container.position.x + Grid.edgeLength,
+      y: this.selectedHex.container.position.y + Grid.h,
     });
   }
 }
+
+const singletonInstance = new InputManager();
+
+export default singletonInstance;

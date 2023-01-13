@@ -1,8 +1,9 @@
 import { app, Graphics } from "./app.js";
 import { Hex } from "./Hex.js";
 
-export class Grid {
-  constructor(width, height, edgeLength, borderWidth, map) {
+class Grid {
+  constructor() {}
+  initialize(width, height, edgeLength, borderWidth, map) {
     this.map = {};
     this.width = width;
     this.height = height;
@@ -35,3 +36,7 @@ export class Grid {
     }
   }
 }
+
+const singletonInstance = new Grid();
+
+export default singletonInstance;

@@ -1,12 +1,7 @@
-import {
-  app,
-  Graphics,
-  Text,
-  Container,
-  Sprite,
-  resources,
-  inputManager,
-} from "./app.js";
+import { app, Graphics, Text, Container, Sprite } from "./app.js";
+
+import InputManager from "./InputManager.js";
+import Resources from "./Resources.js";
 
 export class Hex {
   constructor(
@@ -86,7 +81,7 @@ export class Hex {
 
     if (this.terrainResource !== "none") {
       this.resource_sprite = new PIXI.Sprite(
-        resources.assets[this.terrainResource]
+        Resources.assets[this.terrainResource]
       );
     }
 
@@ -117,7 +112,7 @@ export class Hex {
       this.h * 2,
     ]);
     this.container.on("pointerdown", () => {
-      if (!inputManager.mode && inputManager.active_slot !== -1) {
+      if (!InputManager.mode && InputManager.active_slot !== -1) {
         console.log(this.position);
       }
     });
