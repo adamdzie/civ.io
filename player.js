@@ -1,4 +1,4 @@
-import { app, Graphics } from "./app.js";
+import { app, Graphics } from "./App.js";
 import { Interpolator } from "./Interpolator.js";
 
 export class Player extends Interpolator {

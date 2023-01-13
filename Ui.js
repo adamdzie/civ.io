@@ -1,4 +1,4 @@
-import { app, socket, socket_id } from "./app.js";
+import { app, socket, socket_id } from "./App.js";
 
 import InputManager from "./InputManager.js";
 import Resources from "./Resources.js";
@@ -316,8 +316,6 @@ class UI {
     //this.resources_container.scale.x = this.resources_container.scale.y = 0.5;
   }
   SwitchMode() {
-    this.temporary = !this.temporary;
-
     this.mode_build.visible = !this.mode_build.visible;
     this.build_container.visible = !this.build_container.visible;
     this.combat_container.visible = !this.combat_container.visible;

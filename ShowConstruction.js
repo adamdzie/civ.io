@@ -1,4 +1,4 @@
-import { Graphics, Text, app, Container } from "./app.js";
+import { Graphics, Text, app, Container } from "./App.js";
 import Resources from "./Resources.js";
 
 class ShowConstruction {

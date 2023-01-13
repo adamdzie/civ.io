@@ -1,6 +1,6 @@
-import { app, socket, socket_id } from "./app.js";
+import { app, socket, socket_id } from "./App.js";
 
-import Storage from "./storage.js";
+import Storage from "./Storage.js";
 import UI from "./Ui.js";
 import ShowConstruction from "./ShowConstruction.js";
 import Grid from "./Grid.js";

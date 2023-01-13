@@ -1,4 +1,4 @@
-import { app, Graphics } from "./app.js";
+import { app, Graphics } from "./App.js";
 import { Hex } from "./Hex.js";
 
 class Grid {

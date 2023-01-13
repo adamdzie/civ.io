@@ -1,4 +1,4 @@
-import { Graphics, Text, map, app } from "../app";
+import { Graphics, Text, map, app } from "../App";
 
 export class City extends Building {
   constructor(ownerId, hexCord, hexPosition) {

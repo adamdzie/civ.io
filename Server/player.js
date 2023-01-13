@@ -67,7 +67,7 @@ class Player {
     this.isRotating = true;
   }
   build(hexCord) {
-    this.buildings[[hexCord.x, hexCord.y]] = new City();
+    this.buildings[[hexCord.x, hexCord.y]] = new City(this.id, hexCord);
   }
 }
 

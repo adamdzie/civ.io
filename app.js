@@ -1,6 +1,6 @@
-import { Player } from "./player.js";
+import { Player } from "./Player.js";
 import Grid from "./Grid.js";
-import Storage from "./storage.js";
+import Storage from "./Storage.js";
 import InputManager from "./InputManager.js";
 import UI from "./Ui.js";
 import Resources from "./Resources.js";
@@ -44,6 +44,7 @@ socket.on("add_player", (id, player) => {
 });
 
 socket.on("movement", (id, time, position) => {
+  if (!initiated) return;
   Storage.PlayerList[id].HandleNewTick({
     time: time,
     x: position.x,

@@ -1,4 +1,4 @@
-import { app, Graphics, Text, Container, Sprite } from "./app.js";
+import { app, Graphics, Text, Container, Sprite } from "./App.js";
 
 import InputManager from "./InputManager.js";
 import Resources from "./Resources.js";
