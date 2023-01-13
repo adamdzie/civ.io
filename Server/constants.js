@@ -43,6 +43,16 @@ define("SNOW_RESOURCE", ["Otter", "Seal", "Penguin"]);
 //MOUNTAIN RESOURCES
 define("MOUNTAIN_RESOURCE", ["Diamond", "Marble", "Sulfur"]);
 
+//TIME
+define("REFRESH_INTERVAL", 2000); //MS
+
+//BUILDINGS
+
+define("BUILDING_WIDTH", 100);
+define("BUILDING_HEIGHT", 100);
+
+define("BUILD_TIME", 10);
+
 function define(name, value) {
   Object.defineProperty(exports, name, {
     value: value,

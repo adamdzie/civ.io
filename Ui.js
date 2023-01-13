@@ -330,11 +330,12 @@ export class UI {
     this.active_slot = -1;
     inputManager.SwitchMode();
   }
-  SelectSlot(index, mode, callback) {
+  SelectSlot(index, mode, OnCallback, OffCallback) {
     if (!mode) {
       if (this.active_slot === index) {
         this.build_slots[this.active_slot].y += this.icon_offset;
         this.active_slot = -1;
+        OffCallback();
         return;
       }
 
@@ -345,7 +346,7 @@ export class UI {
         }
         this.active_slot = index;
         this.build_slots[this.active_slot].y -= this.icon_offset;
-        callback(this.active_slot);
+        OnCallback(this.active_slot);
       }
     } else {
       if (this.active_slot === index) {

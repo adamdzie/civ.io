@@ -126,7 +126,7 @@ export class Hex {
     //console.log(this.container.position);
     app.stage.addChild(this.container);
     app.stage.addChild(this.tempgraph);
-    console.log(this.points);
+    //console.log(this.points);
   }
   IsCollide(point) {
     return SAT.pointInPolygon(point, this.collider);

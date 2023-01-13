@@ -1,5 +1,8 @@
+const City = require("./Buildings/City");
+
 class Player {
-  constructor(_x, _y, radius, move_speed, screenCenter) {
+  constructor(_x, _y, radius, move_speed, screenCenter, id) {
+    this.id = id;
     this.position = { x: _x, y: _y };
     this.radius = radius;
     this.move_speed = move_speed;
@@ -11,6 +14,16 @@ class Player {
     this.lastAngle = this.rotation;
     this.rotationThreshold = 0.1;
     this.screenCenter = { x: screenCenter.x, y: screenCenter.y };
+
+    this.gold = 0;
+    this.goldIncome = 0;
+    this.science = 0;
+    this.scienceIncome = 0;
+    this.population = 0;
+    this.populationIncome = 0;
+    this.amenities = 0;
+
+    this.buildings = {};
   }
 
   update(delta) {
@@ -52,6 +65,9 @@ class Player {
   }
   setIsRotating() {
     this.isRotating = true;
+  }
+  build(hexCord) {
+    this.buildings[[hexCord.x, hexCord.y]] = new City();
   }
 }
 

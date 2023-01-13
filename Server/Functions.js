@@ -1,4 +1,4 @@
-const Constants = require("./constants.js");
+const Constants = require("./Constants.js");
 
 function existOnMap(x, y) {
   return (
@@ -10,7 +10,11 @@ function getRandomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function getPercentageOf(number, of) {
+  return Math.round((number / of) * 1000) / 10;
+}
 module.exports = {
   existOnMap,
   getRandomInteger,
+  getPercentageOf,
 };

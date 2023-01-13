@@ -1,4 +1,4 @@
-const Constants = require("./constants.js");
+const Constants = require("./Constants.js");
 const Functions = require("./Functions.js");
 
 class Hex {
@@ -108,6 +108,8 @@ class Hex {
     this.terrainType = "grass";
     this.terrainObstacle = "none";
     this.terrainResource = "none";
+    this.building = "none";
+    this.hexOwner = "none";
   }
 }
 

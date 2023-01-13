@@ -16,4 +16,6 @@ class Storage {
   }
 }
 
-module.exports = Storage;
+const singletonInstance = new Storage();
+
+module.exports = singletonInstance;

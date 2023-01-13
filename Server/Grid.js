@@ -1,5 +1,5 @@
 const Hex = require("./Hex.js");
-const Constants = require("./constants.js");
+const Constants = require("./Constants.js");
 const Functions = require("./Functions.js");
 
 class Grid {
@@ -12,7 +12,7 @@ class Grid {
     this.h = Math.floor((this.edgeLength * Math.sqrt(3)) / 2);
     let isOffset = false;
     let offset = 0;
-
+    this.tempos = 10;
     // snow, desert, grass,
 
     //initiate map
@@ -44,11 +44,11 @@ class Grid {
       else offset = 0;
 
       for (let j = 0; j < this.height; j++) {
-        if (j < 3) {
-          console.log(
-            "POS: " + i * this.edgeLength * 1.5 + ";" + j * this.h * 2 + offset
-          );
-        }
+        // if (j < 3) {
+        //   console.log(
+        //     "POS: " + i * this.edgeLength * 1.5 + ";" + j * this.h * 2 + offset
+        //   );
+        // }
         this.map[[i, j]] = new Hex(
           {
             //x: i * this.edgeLength * 1.5 - 2 * i,
@@ -401,13 +401,13 @@ class Grid {
       //TODO FIND TERRAIN WHEN DISTANCE > 1
     }
   }
-
-  existOnMap(x, y) {
-    return x >= 0 && x < this.width && y >= 0 && y < this.height;
-  }
-  getRandomInteger(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
 }
 
-module.exports = Grid;
+const singletonInstance = new Grid(
+  Constants.MAP_WIDTH,
+  Constants.MAP_HEIGHT,
+  140,
+  0
+);
+
+module.exports = singletonInstance;

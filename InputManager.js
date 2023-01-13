@@ -74,55 +74,100 @@ export class InputManager {
     if (this.input.Digit1 === false) {
       if (e.code === "Digit1") {
         this.input.Digit1 = true;
-        ui.SelectSlot(0, this.mode, this.PickSlotCallback);
+        ui.SelectSlot(
+          0,
+          this.mode,
+          this.PickSlotCallback,
+          this.UnpickSlotCallback
+        );
       }
     }
     if (this.input.Digit2 === false) {
       if (e.code === "Digit2") {
         this.input.Digit2 = true;
-        ui.SelectSlot(1, this.mode, this.PickSlotCallback);
+        ui.SelectSlot(
+          1,
+          this.mode,
+          this.PickSlotCallback,
+          this.UnpickSlotCallback
+        );
       }
     }
     if (this.input.Digit3 === false) {
       if (e.code === "Digit3") {
         this.input.Digit3 = true;
-        ui.SelectSlot(2, this.mode, this.PickSlotCallback);
+        ui.SelectSlot(
+          2,
+          this.mode,
+          this.PickSlotCallback,
+          this.UnpickSlotCallback
+        );
       }
     }
     if (this.input.Digit4 === false) {
       if (e.code === "Digit4") {
         this.input.Digit4 = true;
-        ui.SelectSlot(3, this.mode, this.PickSlotCallback);
+        ui.SelectSlot(
+          3,
+          this.mode,
+          this.PickSlotCallback,
+          this.UnpickSlotCallback
+        );
       }
     }
     if (this.input.Digit5 === false) {
       if (e.code === "Digit5") {
         this.input.Digit5 = true;
-        ui.SelectSlot(4, this.mode, this.PickSlotCallback);
+        ui.SelectSlot(
+          4,
+          this.mode,
+          this.PickSlotCallback,
+          this.UnpickSlotCallback
+        );
       }
     }
     if (this.input.Digit6 === false) {
       if (e.code === "Digit6") {
         this.input.Digit6 = true;
-        ui.SelectSlot(5, this.mode, this.PickSlotCallback);
+        ui.SelectSlot(
+          5,
+          this.mode,
+          this.PickSlotCallback,
+          this.UnpickSlotCallback
+        );
       }
     }
     if (this.input.Digit7 === false) {
       if (e.code === "Digit7") {
         this.input.Digit7 = true;
-        ui.SelectSlot(6, this.mode, this.PickSlotCallback);
+        ui.SelectSlot(
+          6,
+          this.mode,
+          this.PickSlotCallback,
+          this.UnpickSlotCallback
+        );
       }
     }
     if (this.input.Digit8 === false) {
       if (e.code === "Digit8") {
         this.input.Digit8 = true;
-        ui.SelectSlot(7, this.mode, this.PickSlotCallback);
+        ui.SelectSlot(
+          7,
+          this.mode,
+          this.PickSlotCallback,
+          this.UnpickSlotCallback
+        );
       }
     }
     if (this.input.Digit9 === false) {
       if (e.code === "Digit9") {
         this.input.Digit9 = true;
-        ui.SelectSlot(8, this.mode, this.PickSlotCallback);
+        ui.SelectSlot(
+          8,
+          this.mode,
+          this.PickSlotCallback,
+          this.UnpickSlotCallback
+        );
       }
     }
   }
@@ -210,6 +255,7 @@ export class InputManager {
   }
   SwitchMode() {
     this.mode = !this.mode;
+    this.UnpickSlotCallback();
   }
   Update() {
     this.UpdateMouse();
@@ -238,7 +284,6 @@ export class InputManager {
             )
           )
             this.selectedHex = map.map[[i, j]];
-          //console.log(this.selectedHex);
         }
       }
     }
@@ -246,6 +291,10 @@ export class InputManager {
   PickSlotCallback(active_slot) {
     if (active_slot === 0) inputManager.showBuilding = "City";
     inputManager.showMode = true;
+  }
+  UnpickSlotCallback() {
+    inputManager.showMode = false;
+    showConstruction.DisableShow();
   }
   ShowMode() {
     this.SelectHex();
