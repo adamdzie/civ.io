@@ -1,20 +1,45 @@
+const {
+  socketConnection,
+  onConnection,
+  sendToAll,
+} = require("./Utils/Socket-io.js");
+
 const Player = require("./Player.js");
 const Constants = require("./Constants.js");
 const Storage = require("./Storage.js");
 const Grid = require("./Grid.js");
-const City = require("./Buildings/City.js");
+//const City = require("./Buildings/City.js");
+const Timer = require("./Utils/Timer.js");
 
-const io = require("socket.io")(3000, {
-  cors: ["http://localhost:5500"],
-});
+socketConnection();
 
-let building_temp = new City(12, { x: 0, y: 0 }, { x: 0, y: 0 }, 100, 100, 16);
+onConnection(Receive);
 
-// let timson = setInterval(() => {
-//   console.log(Grid.map[[0, 0]].building);
-// }, 2000);
+const myTimer = new Timer(update, Constants.TICK_RATE * 1000);
+myTimer.start();
 
-io.on("connection", (socket) => {
+// TICK LOOP
+function update() {
+  for (var key in Storage.PlayerList) {
+    if (Storage.PlayerList[key].isMoving) {
+      Storage.PlayerList[key].move();
+      let time = Date.now();
+      //console.log(time);
+      sendToAll("movement", [key, time, Storage.PlayerList[key].position]);
+      //io.emit("movement", key, time, Storage.PlayerList[key].position);
+    }
+
+    if (Storage.PlayerList[key].isRotating) {
+      Storage.PlayerList[key].rotate();
+      let time = Date.now();
+      sendToAll("hero_rotation", [key, time, Storage.PlayerList[key].rotation]);
+      //io.emit("hero_rotation", key, time, Storage.PlayerList[key].rotation);
+    }
+  }
+  //console.log("Czas trwania petli: ", time - Date.now());
+}
+
+function Receive(socket) {
   socket.on("initialize", (screenCenter) => {
     Storage.Add(
       socket.id,
@@ -38,50 +63,11 @@ io.on("connection", (socket) => {
       Storage.PlayerList[socket.id].setIsRotating();
     });
 
-    socket.on("build", (hexCord) => {});
+    socket.on("build", (hexCord) => {
+      Storage.PlayerList[socket.id].build(hexCord);
+    });
     socket.on("disconnect", () => {
       console.log("disconnect");
     });
   });
-});
-
-function Timer(callback, timeInterval) {
-  this.timeInterval = timeInterval;
-
-  this.start = () => {
-    this.expected = Date.now() + this.timeInterval;
-    this.timeout = setTimeout(this.round, this.timeInterval);
-  };
-
-  this.stop = () => {
-    clearTimeout(this.timeout);
-  };
-
-  this.round = () => {
-    let drift = Date.now() - this.expected;
-    callback();
-    this.expected += this.timeInterval;
-    this.timeout = setTimeout(this.round, this.timeInterval - drift);
-  };
-}
-
-const myTimer = new Timer(update, Constants.TICK_RATE * 1000);
-myTimer.start();
-// TICK LOOP
-function update() {
-  for (var key in Storage.PlayerList) {
-    if (Storage.PlayerList[key].isMoving) {
-      Storage.PlayerList[key].move();
-      let time = Date.now();
-      //console.log(time);
-      io.emit("movement", key, time, Storage.PlayerList[key].position);
-    }
-
-    if (Storage.PlayerList[key].isRotating) {
-      Storage.PlayerList[key].rotate();
-      let time = Date.now();
-      io.emit("hero_rotation", key, time, Storage.PlayerList[key].rotation);
-    }
-  }
-  //console.log("Czas trwania petli: ", time - Date.now());
 }

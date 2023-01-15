@@ -1,8 +1,10 @@
-import { Graphics, Text, map, app } from "../App";
+// import { Graphics, Text, app } from "../App.js";
 
-export class City extends Building {
-  constructor(ownerId, hexCord, hexPosition) {
-    super();
+import Building from "./Building.js";
+class City extends Building {
+  constructor(ownerId, hexCord, isBuilt) {
+    super(ownerId, hexCord, "City", isBuilt);
   }
-  static ShowTempBuilding() {}
 }
+
+export default City;

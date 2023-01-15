@@ -110,6 +110,7 @@ class Hex {
     this.terrainResource = "none";
     this.building = "none";
     this.hexOwner = "none";
+    this.whoBuilds = "none";
   }
 }
 

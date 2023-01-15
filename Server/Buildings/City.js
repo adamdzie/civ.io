@@ -1,9 +1,9 @@
-const Building = require("./Building");
+const Building = require("./Building.js");
 const Grid = require("../Grid.js");
 
 class City extends Building {
   constructor(ownerId, hexCord) {
-    super(ownerId, hexCord);
+    super(ownerId, hexCord, 0);
 
     this.ownedHexes = [hexCord];
   }

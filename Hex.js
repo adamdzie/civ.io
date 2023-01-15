@@ -2,6 +2,7 @@ import { app, Graphics, Text, Container, Sprite } from "./App.js";
 
 import InputManager from "./InputManager.js";
 import Resources from "./Resources.js";
+import BuildingFactory from "./Buildings/BuildingFactory.js";
 
 export class Hex {
   constructor(
@@ -12,13 +13,18 @@ export class Hex {
     terrainType,
     terrainObstacle,
     terrainResource,
-    hexCord
+    hexCord,
+    type,
+    hexOwner,
+    whoBuilds
   ) {
     this.position = position;
     this.edgeLength = edgeLength;
     this.borderWidth = borderWidth;
     this.h = (this.edgeLength * Math.sqrt(3)) / 2;
     this.hexCord = hexCord;
+    this.hexOwner = hexOwner;
+    this.whoBuilds = whoBuilds;
 
     this.points = points;
     //var v = new SAT.Vector(10, 10);
@@ -41,6 +47,7 @@ export class Hex {
       .lineTo(this.points[8], this.points[9])
       .lineTo(this.points[10], this.points[11])
       .lineTo(this.points[0], this.points[1]);
+
     this.terrainType = terrainType;
     this.terrainObstacle = terrainObstacle;
     this.terrainResource = terrainResource;

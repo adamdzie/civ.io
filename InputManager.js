@@ -19,10 +19,7 @@ class InputManager {
     window.addEventListener("keydown", (e) => this.KeyPressed(e));
     window.addEventListener("keyup", (e) => this.KeyReleased(e));
     window.addEventListener("mousemove", (e) => this.OnMouseMove(e));
-    // window.addEventListener("mousedown", (e) => {
-    //   let pos = this.GetWorldPoint(e.clientX, e.clientY);
-    //   console.log("POS: " + pos.x + "," + pos.y);
-    // });
+    window.addEventListener("mousedown", (e) => this.OnMouseDown(e));
 
     this.mode = true;
     this.move_vector = { x: 0, y: 0 };
@@ -43,6 +40,17 @@ class InputManager {
       Digit9: false,
     };
     this.initialized = true;
+  }
+  OnMouseDown(e) {
+    if (this.showMode) {
+      UI.SelectSlot(
+        UI.active_slot,
+        this.mode,
+        this.PickSlotCallback,
+        this.UnpickSlotCallback
+      );
+      socket.emit("build", this.selectedHex.hexCord);
+    }
   }
   KeyPressed(e) {
     //MOVEMENT INPUT SECTION

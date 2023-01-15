@@ -13,11 +13,6 @@ class Grid {
 
     for (let i = 0; i < this.width; i++) {
       for (let j = 0; j < this.height; j++) {
-        // if (j < 3) {
-        //   console.log("Cord: " + i + "," + j);
-        //   console.log(map[[i, j]].points);
-        // }
-
         this.map[[i, j]] = new Hex(
           map[[i, j]].position,
           map[[i, j]].edgeLength,
@@ -26,14 +21,17 @@ class Grid {
           map[[i, j]].terrainType,
           map[[i, j]].terrainObstacle,
           map[[i, j]].terrainResource,
-          { x: i, y: j }
+          { x: i, y: j },
+          map[[i, j]].building,
+          map[[i, j]].hexOwner,
+          map[[i, j]].whoBuilds
         );
-
-        // console.log(
-        //   "IN: " + i + "," + j + "  " + this.map[[i, j]].container.width
-        // );
       }
     }
+    console.log("GRID INITIATED");
+  }
+  PlaceBuilding(hexCord, building) {
+    this.map[[hexCord.x, hexCord.y]].building = building;
   }
 }
 

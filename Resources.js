@@ -73,6 +73,17 @@ class Resources {
     resource = PIXI.Texture.from("./Assets/Icons/ICON_MASK.png");
     this.assets["Icon_mask"] = resource;
 
+    let grap3 = new PIXI.Graphics();
+    grap3
+      .beginFill(0xc7ee0e, 1)
+      .lineStyle(3, 0x000000, 1)
+      .drawRect(0, 0, 100, 100)
+      .endFill();
+
+    let texture3 = app.renderer.generateTexture(grap3);
+
+    this.assets["Construction"] = texture3;
+
     let grap = new PIXI.Graphics();
     grap
       .beginFill(0x42b7df, 0.2)
@@ -83,6 +94,17 @@ class Resources {
     let texture = app.renderer.generateTexture(grap);
 
     this.assets["City_temp"] = new PIXI.Sprite(texture);
+
+    let grap2 = new PIXI.Graphics();
+    grap2
+      .beginFill(0x42b7df, 1)
+      .lineStyle(3, 0x000000, 1)
+      .drawRect(0, 0, 100, 100)
+      .endFill();
+
+    let texture2 = app.renderer.generateTexture(grap2);
+
+    this.assets["City"] = texture2;
   }
 }
 

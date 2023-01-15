@@ -1,4 +1,5 @@
-const City = require("./Buildings/City");
+const City = require("./Buildings/City.js");
+const Grid = require("./Grid.js");
 
 class Player {
   constructor(_x, _y, radius, move_speed, screenCenter, id) {
@@ -67,6 +68,9 @@ class Player {
     this.isRotating = true;
   }
   build(hexCord) {
+    console.log(typeof City);
+    Grid.map[[hexCord.x, hexCord.y]].building = 0;
+    Grid.map[[hexCord.x, hexCord.y]].whoBuilds = this.id;
     this.buildings[[hexCord.x, hexCord.y]] = new City(this.id, hexCord);
   }
 }

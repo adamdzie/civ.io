@@ -5,6 +5,7 @@ import InputManager from "./InputManager.js";
 import UI from "./Ui.js";
 import Resources from "./Resources.js";
 import ShowConstruction from "./ShowConstruction.js";
+import BuildingFactory from "./Buildings/BuildingFactory.js";
 //import { Resource } from "pixi.js";
 
 //var SAT = require("sat");
@@ -31,8 +32,17 @@ socket.on("initialize", async (players, _socketId, grid) => {
   );
 
   for (var key in players) {
+    for (var cord in players[key].buildings) {
+      BuildingFactory.Build(
+        key,
+        players[key].buildings[cord].type,
+        players[key].buildings[cord].hexCord,
+        players[key].buildings[cord].isBuilt
+      );
+    }
     await Storage.Add(key, players[key]);
   }
+
   ShowConstruction.initialize();
   InputManager.initialize();
   UI.initialize();
@@ -43,22 +53,31 @@ socket.on("add_player", (id, player) => {
   Storage.Add(id, player);
 });
 
-socket.on("movement", (id, time, position) => {
+socket.on("movement", (args) => {
   if (!initiated) return;
-  Storage.PlayerList[id].HandleNewTick({
-    time: time,
-    x: position.x,
-    y: position.y,
+  Storage.PlayerList[args[0]].HandleNewTick({
+    time: args[1],
+    x: args[2].x,
+    y: args[2].y,
   });
 });
 
-socket.on("hero_rotation", (id, time, rotation) => {
+socket.on("hero_rotation", (args) => {
   //console.log("TO CZAS:" + time + "A TO ANGLE: " + rotation);
   if (!initiated) return;
-  Storage.PlayerList[id].HandleNewRotationTick({
-    time: time,
-    angle: rotation,
+  Storage.PlayerList[args[0]].HandleNewRotationTick({
+    time: args[1],
+    angle: args[2],
   });
+});
+
+socket.on("build", (args) => {
+  if (!initiated) return;
+  BuildingFactory.Build(args[0], args[1], args[2], false);
+});
+
+socket.on("Building_complete", (hexCord) => {
+  Grid.map[[hexCord.x, hexCord.y]].building.complete();
 });
 
 const Application = PIXI.Application;
@@ -120,6 +139,8 @@ function loop(delta) {
 
   UI.update();
   InputManager.Update();
+  //console.log(Grid.map[[0, 0]].building);
+  //console.log(Grid.map[[0, 1]].building);
 
   // if (
   //   SAT.pointInPolygon(
