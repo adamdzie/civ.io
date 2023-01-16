@@ -21,7 +21,7 @@ socket.on("connect", () => {});
 socket.on("initialize", async (players, _socketId, grid) => {
   socket_id = _socketId;
 
-  Resources.initialize();
+  Resources.initialize(grid.map[[0, 0]].points);
 
   await Grid.initialize(
     grid.width,
@@ -32,15 +32,16 @@ socket.on("initialize", async (players, _socketId, grid) => {
   );
 
   for (var key in players) {
+    await Storage.Add(key, players[key]);
     for (var cord in players[key].buildings) {
       BuildingFactory.Build(
         key,
         players[key].buildings[cord].type,
         players[key].buildings[cord].hexCord,
-        players[key].buildings[cord].isBuilt
+        players[key].buildings[cord].isBuilt,
+        players[key].buildings[cord].ownedHexes
       );
     }
-    await Storage.Add(key, players[key]);
   }
 
   ShowConstruction.initialize();
@@ -73,7 +74,7 @@ socket.on("hero_rotation", (args) => {
 
 socket.on("build", (args) => {
   if (!initiated) return;
-  BuildingFactory.Build(args[0], args[1], args[2], false);
+  BuildingFactory.Build(args[0], args[1], args[2], false, args[3]);
 });
 
 socket.on("Building_complete", (hexCord) => {

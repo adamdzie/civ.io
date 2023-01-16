@@ -2,7 +2,7 @@ import { app, socket, socket_id } from "./App.js";
 
 class Resources {
   constructor() {}
-  initialize() {
+  initialize(points) {
     //LOAD RESOURCES
 
     this.assets = {};
@@ -105,6 +105,13 @@ class Resources {
     let texture2 = app.renderer.generateTexture(grap2);
 
     this.assets["City"] = texture2;
+
+    let grap4 = new PIXI.Graphics();
+    grap4.beginFill(0x40fd00, 0.1).drawPolygon(points).endFill();
+
+    let texture4 = app.renderer.generateTexture(grap4);
+
+    this.assets["Hex_mask_owner"] = texture4;
   }
 }
 

@@ -9,6 +9,8 @@ class Building {
     this.ownerId = ownerId;
     this.hexCord = hexCord;
     this.type = type;
+
+    this.ownedHexes = [hexCord];
     //this.hexWidth = map.map[[0, 0]].edgeLength * 2;
     //this.hexHeight = map.map[[0, 0]].h * 2;
 
@@ -27,7 +29,12 @@ class Building {
     );
 
     console.log("Wysyłamy");
-    sendToAll("build", [this.ownerId, this.type, this.hexCord]);
+    sendToAll("build", [
+      this.ownerId,
+      this.type,
+      this.hexCord,
+      this.ownedHexes,
+    ]);
 
     let _buildInterval = setInterval(() => {
       if (buildingCompletePercentage + addPercent >= 100)

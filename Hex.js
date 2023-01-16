@@ -82,6 +82,8 @@ export class Hex {
     this.sprite.x = 0;
     this.sprite.y = 0;
 
+    this.sprite.zIndex = 1;
+
     //CREATE RESOURCE SPRITE
 
     this.resource_sprite = "none";
@@ -90,6 +92,7 @@ export class Hex {
       this.resource_sprite = new PIXI.Sprite(
         Resources.assets[this.terrainResource]
       );
+      this.resource_sprite.zIndex = 4;
     }
 
     this.resource_sprite.anchor.x = -2.5;
@@ -124,6 +127,14 @@ export class Hex {
       }
     });
 
+    this.ownerSprite = "none";
+    if (this.hexOwner !== "none") {
+      this.ownerSprite = new PIXI.Sprite(Resources.assets["Hex_mask_owner"]);
+      this.ownerSprite.zIndex = 3;
+      this.container.addChild(this.ownerSprite);
+    }
+
+    this.container.sortableChildren = true;
     // console.log("Pos: " + this.container.x + "," + this.container.y);
     //console.log(this.container.position);
     app.stage.addChild(this.container);

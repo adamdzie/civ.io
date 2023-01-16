@@ -1,13 +1,15 @@
 import { Graphics, Text, app } from "../App.js";
 import Grid from "../Grid.js";
 import Resources from "../Resources.js";
+import Storage from "../Storage.js";
 class Building {
-  constructor(ownerId, hexCord, type, isBuilt) {
+  constructor(ownerId, hexCord, type, isBuilt, ownedHexes) {
     this.ownerId = ownerId;
     this.hexCord = hexCord;
     this.isBuilt = isBuilt;
     this.hexWidth = Grid.map[[0, 0]].edgeLength * 2;
     this.hexHeight = Grid.map[[0, 0]].h * 2;
+    this.ownedHexes = ownedHexes;
 
     this.constructionSprite = new PIXI.Sprite(Resources.assets["Construction"]);
 
@@ -41,9 +43,22 @@ class Building {
     app.stage.addChild(this.container);
 
     Grid.map[[hexCord.x, hexCord.y]].building = this;
+
+    Storage.PlayerList[this.ownerId].buildings[
+      [this.hexCord.x, this.hexCord.y]
+    ] = this;
+    if (this.constructor.name === "City")
+      Storage.PlayerList[this.ownerId].citiesCords[
+        [this.hexCord.x, this.hexCord.y]
+      ] = this.hexCord;
   }
   complete() {
     this.isBuilt = true;
+
+    this.ownedHexes.forEach((hex) => {
+      Grid.map[[hex.x, hex.y]].hexOwner = this.ownerId;
+    });
+
     this.container.removeChild(this.constructionSprite);
     this.constructionSprite = null;
 

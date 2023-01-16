@@ -4,8 +4,6 @@ const Grid = require("../Grid.js");
 class City extends Building {
   constructor(ownerId, hexCord) {
     super(ownerId, hexCord, 0);
-
-    this.ownedHexes = [hexCord];
   }
   BuildingComplete() {
     super.BuildingComplete();

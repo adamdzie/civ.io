@@ -7,6 +7,8 @@ export class Player extends Interpolator {
     this.position = position;
     this.radius = radius;
     this.move_speed = move_speed;
+    this.buildings = {};
+    this.citiesCords = {};
 
     let circle = new Graphics();
 
