@@ -1,8 +1,10 @@
 let io;
 
-exports.socketConnection = () => {
-  io = require("socket.io")(3000, {
-    cors: ["http://localhost:5500"],
+const { Server } = require("socket.io");
+
+exports.socketConnection = (server) => {
+  io = new Server(server, {
+    cors: ["http://25.22.175.22:3000"],
   });
 };
 exports.onConnection = (fire) =>

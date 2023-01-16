@@ -1,4 +1,4 @@
-import { app, socket, socket_id } from "./App.js";
+import { app, socket_id } from "./App.js";
 
 import InputManager from "./InputManager.js";
 import Resources from "./Resources.js";
@@ -24,17 +24,17 @@ class UI {
     this.mode_container = new PIXI.Container();
 
     this.mode_container.x = 10;
-    this.mode_container.y = 860;
+    this.mode_container.y = app.renderer.height - 70;
 
     this.combat_container = new PIXI.Container();
 
     this.combat_container.x = 100;
-    this.combat_container.y = 860;
+    this.combat_container.y = app.renderer.height - 70;
 
     this.build_container = new PIXI.Container();
 
     this.build_container.x = 100;
-    this.build_container.y = 860;
+    this.build_container.y = app.renderer.height - 70;
 
     this.build_container.visible = false;
 
@@ -313,7 +313,7 @@ class UI {
     // this.resources_container.x = app.stage.pivot.x - app.renderer.width / 2 + 0;
     // this.resources_container.y =
     //   app.stage.pivot.y - app.renderer.height / 2 + 0;
-    //this.resources_container.scale.x = this.resources_container.scale.y = 0.5;
+    // this.resources_container.scale.x = this.resources_container.scale.y = 0.5;
   }
   SwitchMode() {
     this.mode_build.visible = !this.mode_build.visible;

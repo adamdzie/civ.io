@@ -4,6 +4,11 @@ const {
   sendToAll,
 } = require("./Utils/Socket-io.js");
 
+const express = require("express");
+const app = express();
+const http = require("http");
+const server = http.createServer(app);
+
 const Player = require("./Player.js");
 const Constants = require("./Constants.js");
 const Storage = require("./Storage.js");
@@ -11,9 +16,22 @@ const Grid = require("./Grid.js");
 //const City = require("./Buildings/City.js");
 const Timer = require("./Utils/Timer.js");
 
-socketConnection();
+socketConnection(server);
+
+app.use(express.static(__dirname + "/Public"));
+
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/Public/index.html");
+});
+// app.get("App.js", (req, res) => {
+//   res.sendFile(__dirname + "Public/App.js");
+// });
 
 onConnection(Receive);
+
+server.listen(3000, () => {
+  console.log("listening on *:3000");
+});
 
 const myTimer = new Timer(update, Constants.TICK_RATE * 1000);
 myTimer.start();

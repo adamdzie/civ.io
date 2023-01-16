@@ -6,11 +6,13 @@ import UI from "./Ui.js";
 import Resources from "./Resources.js";
 import ShowConstruction from "./ShowConstruction.js";
 import BuildingFactory from "./Buildings/BuildingFactory.js";
+import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
+// import { io } from "./socket.io-client";
 //import { Resource } from "pixi.js";
 
 //var SAT = require("sat");
 
-export const socket = io("http://localhost:3000");
+export const socket = io("http://25.22.175.22:3000");
 
 export var socket_id = "";
 
@@ -84,17 +86,25 @@ socket.on("Building_complete", (hexCord) => {
 const Application = PIXI.Application;
 
 export const app = new Application({
-  width: 500,
-  height: 500,
+  //resizeTo: window,
+  width: window.innerWidth * window.devicePixelRatio,
+  height: window.innerHeight * window.devicePixelRatio,
   transparent: false,
   antialias: true,
+  //resolution: 1,
 });
 
 app.renderer.backgroundColor = 0xaaaaaa;
 
-app.renderer.resize(window.innerWidth, window.innerHeight);
+// app.stage.scale.x = 1.5;
+// app.stage.scale.y = 1.5;
+console.log(app.renderer.resolution);
+console.log(app.screen);
+//app.renderer.resize(window.innerWidth, window.innerHeight);
 
 app.renderer.view.style.position = "absolute";
+
+console.log(app.renderer.view);
 
 document.body.appendChild(app.view);
 

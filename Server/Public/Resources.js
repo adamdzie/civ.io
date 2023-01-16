@@ -1,4 +1,4 @@
-import { app, socket, socket_id } from "./App.js";
+import { app, socket_id } from "./App.js";
 
 class Resources {
   constructor() {}
