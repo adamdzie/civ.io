@@ -250,6 +250,7 @@ class InputManager {
   OnMouseMove(e) {
     this.mouseMoving = true;
     this.mousePosition = this.GetWorldPoint(e.clientX, e.clientY);
+    //console.log(this.mousePosition);
     this.mouseScreenPosition = { x: e.clientX, y: e.clientY };
 
     if (socket_id !== "")

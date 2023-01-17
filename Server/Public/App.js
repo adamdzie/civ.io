@@ -7,12 +7,14 @@ import Resources from "./Resources.js";
 import ShowConstruction from "./ShowConstruction.js";
 import BuildingFactory from "./Buildings/BuildingFactory.js";
 import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
+import View from "./View.js";
 // import { io } from "./socket.io-client";
 //import { Resource } from "pixi.js";
 
 //var SAT = require("sat");
 
 export const socket = io("http://25.22.175.22:3000");
+//export const socket = io("http://localhost:3000");
 
 export var socket_id = "";
 
@@ -85,28 +87,34 @@ socket.on("Building_complete", (hexCord) => {
 
 const Application = PIXI.Application;
 
+const GAME_WIDTH = 2400;
+const GAME_HEIGHT = 1250;
+console.log(window.devicePixelRatio);
+console.log(window.screen.width);
+
 export const app = new Application({
-  //resizeTo: window,
-  width: window.innerWidth * window.devicePixelRatio,
-  height: window.innerHeight * window.devicePixelRatio,
+  width: GAME_WIDTH,
+  height: GAME_HEIGHT,
+  // width: window.innerWidth * window.devicePixelRatio,
+  // height: window.innerHeight * window.devicePixelRatio,
   transparent: false,
   antialias: true,
+  resolution: window.devicePixelRatio,
+  autoResize: true,
   //resolution: 1,
 });
 
 app.renderer.backgroundColor = 0xaaaaaa;
 
-// app.stage.scale.x = 1.5;
-// app.stage.scale.y = 1.5;
-console.log(app.renderer.resolution);
-console.log(app.screen);
-//app.renderer.resize(window.innerWidth, window.innerHeight);
-
 app.renderer.view.style.position = "absolute";
+app.renderer.view.style.top = "0px";
+app.renderer.view.style.left = "0px";
 
-console.log(app.renderer.view);
+resize();
 
 document.body.appendChild(app.view);
+
+window.addEventListener("resize", resize);
 
 app.stage.position.x = app.renderer.width / 2;
 app.stage.position.y = app.renderer.height / 2;
@@ -121,7 +129,8 @@ export const Graphics = PIXI.Graphics;
 export const Text = PIXI.Text;
 export const Container = PIXI.Container;
 export const Sprite = PIXI.Sprite;
-
+//app.view.style.width = app.renderer.width + "px";
+//app.view.style.height = app.renderer.height + "px";
 // let collider = new SAT.Polygon(new SAT.Vector(0, 0), [
 //   new SAT.Vector(0, 121.24),
 //   new SAT.Vector(70, 0),
@@ -166,6 +175,33 @@ function loop(delta) {
 
   //TODO OPTIMIZE SEARCHING HEX
   //NOW IS O(n) DEPENDS FROM MAP SIZE
+  // app.view.style.width = window.innerWidth + "px";
+  // app.view.style.height = window.innerHeight + "px";
 
+  //app.stage.height = window.innerHeight;
   cull.cull(app.renderer.screen);
+}
+
+function resize() {
+  // Determine which screen dimension is most constrained
+  let ratio = Math.max(
+    window.innerWidth / GAME_WIDTH,
+    window.innerHeight / GAME_HEIGHT
+  );
+
+  let ratio_x = window.innerWidth / GAME_WIDTH;
+  let ratio_y = window.innerHeight / GAME_HEIGHT;
+  // Scale the view appropriately to fill that dimension
+  app.stage.scale.x = app.stage.scale.y = ratio;
+
+  // Update the renderer dimensions
+  app.renderer.resize(
+    Math.ceil(GAME_WIDTH * ratio_x),
+    Math.ceil(GAME_HEIGHT * ratio_y)
+    //Math.ceil(GAME_HEIGHT * ratio)
+  );
+  console.log(app.renderer.width);
+  app.stage.position.x = app.renderer.width / 2;
+  app.stage.position.y = app.renderer.height / 2;
+  //app.renderer.height = GAME_HEIGHT;
 }

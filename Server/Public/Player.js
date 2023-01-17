@@ -45,6 +45,7 @@ export class Player extends Interpolator {
     this.position = this.currentPosition;
     this.sprite.x = this.position.x;
     this.sprite.y = this.position.y;
+    //console.log(this.position);w
   }
   updateRotation() {
     this.sprite.rotation = this.currentAngle;

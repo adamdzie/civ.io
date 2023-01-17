@@ -29,6 +29,7 @@ class Player {
 
   update(delta) {
     this.updateMovement(delta);
+    console.log(this.position);
   }
 
   move() {
