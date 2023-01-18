@@ -1,5 +1,6 @@
 import { app, Graphics } from "./App.js";
 import { Interpolator } from "./Interpolator.js";
+import View from "./View.js";
 
 export class Player extends Interpolator {
   constructor(position, radius, move_speed, rotation) {
@@ -9,6 +10,14 @@ export class Player extends Interpolator {
     this.move_speed = move_speed;
     this.buildings = {};
     this.citiesCords = {};
+
+    this.gold = 0;
+    this.goldIncome = 0;
+    this.science = 0;
+    this.scienceIncome = 0;
+    this.population = 0;
+    this.populationIncome = 0;
+    this.amenities = 0;
 
     let circle = new Graphics();
 
@@ -32,7 +41,8 @@ export class Player extends Interpolator {
     this.sprite.anchor.y = 0.5;
     this.cont.addChild(this.sprite);
 
-    app.stage.addChild(this.sprite);
+    View.Add([this.sprite]);
+    //app.stage.addChild(this.sprite);
     //this.sprite.angle = 0;
   }
 

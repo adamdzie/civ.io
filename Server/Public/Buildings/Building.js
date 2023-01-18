@@ -2,6 +2,7 @@ import { Graphics, Text, app } from "../App.js";
 import Grid from "../Grid.js";
 import Resources from "../Resources.js";
 import Storage from "../Storage.js";
+import View from "../View.js";
 class Building {
   constructor(ownerId, hexCord, type, isBuilt, ownedHexes) {
     this.ownerId = ownerId;
@@ -40,7 +41,8 @@ class Building {
 
     this.container.x = this.hexPosition.x - 100 / 2;
     this.container.y = this.hexPosition.y - 100 / 2;
-    app.stage.addChild(this.container);
+
+    View.Add([this.container]);
 
     Grid.map[[hexCord.x, hexCord.y]].building = this;
 
@@ -57,6 +59,7 @@ class Building {
 
     this.ownedHexes.forEach((hex) => {
       Grid.map[[hex.x, hex.y]].hexOwner = this.ownerId;
+      Grid.map[[hex.x, hex.y]].displayHexOwnage();
     });
 
     this.container.removeChild(this.constructionSprite);

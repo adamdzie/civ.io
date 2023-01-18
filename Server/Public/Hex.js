@@ -3,6 +3,7 @@ import { app, Graphics, Text, Container, Sprite } from "./App.js";
 import InputManager from "./InputManager.js";
 import Resources from "./Resources.js";
 import BuildingFactory from "./Buildings/BuildingFactory.js";
+import View from "./View.js";
 
 export class Hex {
   constructor(
@@ -16,7 +17,8 @@ export class Hex {
     hexCord,
     type,
     hexOwner,
-    whoBuilds
+    whoBuilds,
+    neighbours
   ) {
     this.position = position;
     this.edgeLength = edgeLength;
@@ -25,6 +27,7 @@ export class Hex {
     this.hexCord = hexCord;
     this.hexOwner = hexOwner;
     this.whoBuilds = whoBuilds;
+    this.neighbours = neighbours;
 
     this.points = points;
     //var v = new SAT.Vector(10, 10);
@@ -135,13 +138,21 @@ export class Hex {
     }
 
     this.container.sortableChildren = true;
-    // console.log("Pos: " + this.container.x + "," + this.container.y);
-    //console.log(this.container.position);
-    app.stage.addChild(this.container);
-    app.stage.addChild(this.tempgraph);
-    //console.log(this.points);
+
+    View.Add([this.container, this.tempgraph]);
+    // app.stage.addChild(this.container);
+    // app.stage.addChild(this.tempgraph);
+    //console.log(this.position.x + this.edgeLength);
+    // console.log(this.position.y + this.h);
   }
   IsCollide(point) {
     return SAT.pointInPolygon(point, this.collider);
+  }
+  displayHexOwnage() {
+    if (this.hexOwner !== "none") {
+      this.ownerSprite = new PIXI.Sprite(Resources.assets["Hex_mask_owner"]);
+      this.ownerSprite.zIndex = 3;
+      this.container.addChild(this.ownerSprite);
+    }
   }
 }

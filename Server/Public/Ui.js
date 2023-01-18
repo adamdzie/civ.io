@@ -1,7 +1,8 @@
-import { app, socket_id } from "./App.js";
+import { app, socket_id, ratio, ratio_x, ratio_y } from "./App.js";
 
 import InputManager from "./InputManager.js";
 import Resources from "./Resources.js";
+import Storage from "./Storage.js";
 
 class UI {
   constructor() {
@@ -80,7 +81,7 @@ class UI {
 
     //GOLD QUANTITY
 
-    this.gold_quantity = new PIXI.Text("999k", {
+    this.gold_quantity = new PIXI.Text(Storage.PlayerList[socket_id].gold, {
       fill: 0xffd700,
       fontSize: 17,
       fontWeight: "bold",
@@ -94,42 +95,51 @@ class UI {
 
     //GOLD INCOME
 
-    this.gold_income = new PIXI.Text("+999k", {
-      fill: 0x999999,
-      fontSize: 14,
-      fontWeight: "bold",
-      stroke: "black",
-      strokeThickness: 2.5,
-      letterSpacing: 1,
-    });
+    this.gold_income = new PIXI.Text(
+      "+" + Storage.PlayerList[socket_id].goldIncome,
+      {
+        fill: 0x999999,
+        fontSize: 14,
+        fontWeight: "bold",
+        stroke: "black",
+        strokeThickness: 2.5,
+        letterSpacing: 1,
+      }
+    );
 
     this.gold_income.x = this.gold_quantity.x + this.gold_quantity.width;
     this.gold_income.y = 0;
 
     //SCIENCE QUANTITY
 
-    this.science_quantity = new PIXI.Text("999k", {
-      fill: 0x4392d2,
-      fontSize: 17,
-      fontWeight: "bold",
-      stroke: "black",
-      strokeThickness: 2.5,
-      letterSpacing: 1,
-    });
+    this.science_quantity = new PIXI.Text(
+      Storage.PlayerList[socket_id].science,
+      {
+        fill: 0x4392d2,
+        fontSize: 17,
+        fontWeight: "bold",
+        stroke: "black",
+        strokeThickness: 2.5,
+        letterSpacing: 1,
+      }
+    );
 
     this.science_quantity.x = 146;
     this.science_quantity.y = 4;
 
     //SCIENCE INCOME
 
-    this.science_income = new PIXI.Text("+999k", {
-      fill: 0x999999,
-      fontSize: 14,
-      fontWeight: "bold",
-      stroke: "black",
-      strokeThickness: 2.5,
-      letterSpacing: 1,
-    });
+    this.science_income = new PIXI.Text(
+      "+" + Storage.PlayerList[socket_id].scienceIncome,
+      {
+        fill: 0x999999,
+        fontSize: 14,
+        fontWeight: "bold",
+        stroke: "black",
+        strokeThickness: 2.5,
+        letterSpacing: 1,
+      }
+    );
 
     this.science_income.x =
       this.science_quantity.x + this.science_quantity.width;
@@ -137,28 +147,34 @@ class UI {
 
     //POPULATION QUANTITY
 
-    this.population_quantity = new PIXI.Text("999k", {
-      fill: 0x36a800,
-      fontSize: 17,
-      fontWeight: "bold",
-      stroke: "black",
-      strokeThickness: 2.5,
-      letterSpacing: 1,
-    });
+    this.population_quantity = new PIXI.Text(
+      Storage.PlayerList[socket_id].population,
+      {
+        fill: 0x36a800,
+        fontSize: 17,
+        fontWeight: "bold",
+        stroke: "black",
+        strokeThickness: 2.5,
+        letterSpacing: 1,
+      }
+    );
 
     this.population_quantity.x = 260;
     this.population_quantity.y = 4;
 
     //POPULATION INCOME
 
-    this.population_income = new PIXI.Text("+999k", {
-      fill: 0x999999,
-      fontSize: 14,
-      fontWeight: "bold",
-      stroke: "black",
-      strokeThickness: 2.5,
-      letterSpacing: 1,
-    });
+    this.population_income = new PIXI.Text(
+      "+" + Storage.PlayerList[socket_id].populationIncome,
+      {
+        fill: 0x999999,
+        fontSize: 14,
+        fontWeight: "bold",
+        stroke: "black",
+        strokeThickness: 2.5,
+        letterSpacing: 1,
+      }
+    );
 
     this.population_income.x =
       this.population_quantity.x + this.population_quantity.width;
@@ -166,14 +182,17 @@ class UI {
 
     //AMENITIES QUANTITY
 
-    this.amenities_quantity = new PIXI.Text("999", {
-      fill: 0xd0d0d0,
-      fontSize: 17,
-      fontWeight: "bold",
-      stroke: "black",
-      strokeThickness: 2.5,
-      letterSpacing: 1,
-    });
+    this.amenities_quantity = new PIXI.Text(
+      Storage.PlayerList[socket_id].amenities,
+      {
+        fill: 0xd0d0d0,
+        fontSize: 17,
+        fontWeight: "bold",
+        stroke: "black",
+        strokeThickness: 2.5,
+        letterSpacing: 1,
+      }
+    );
 
     this.amenities_quantity.x = 375;
     this.amenities_quantity.y = 4;
@@ -368,6 +387,15 @@ class UI {
         this.combat_slots[this.active_slot].y -= this.icon_offset;
       }
     }
+  }
+
+  Resize() {
+    let temp_ratio = ratio * 0.9;
+    this.main_container.scale.x = this.main_container.scale.y = temp_ratio;
+    this.mode_container.y =
+      this.combat_container.y =
+      this.build_container.y =
+        app.renderer.height / temp_ratio - 70;
   }
 }
 

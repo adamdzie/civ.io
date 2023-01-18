@@ -1,5 +1,6 @@
 import { Graphics, Text, app, Container } from "./App.js";
 import Resources from "./Resources.js";
+import View from "./View.js";
 
 class ShowConstruction {
   constructor() {}
@@ -14,7 +15,7 @@ class ShowConstruction {
     this.container.zIndex = 1000;
 
     this.container.addChild(this.constructionAssets["City"]);
-    app.stage.addChild(this.container);
+    View.Add([this.container]);
   }
   //TODO IMPROVEMENT POSSIBLE, CHANGE CONTAINER POSITION ONLY WHEN HEX IS CHANGING
   Show(construction, hexPosition) {

@@ -41,11 +41,13 @@ class Player {
     this.position.y += this.move_vector.y * this.move_speed;
   }
   rotate() {
+    //console.log("MOUSE POS: " + this.mouse_position.x);
+    //console.log("SCREEN POS: " + this.screenCenter.x);
     let a = {
       x: this.mouse_position.x - this.screenCenter.x,
       y: this.mouse_position.y - this.screenCenter.y,
     };
-    //console.log(this.mouse);
+    //console.log(this.mouse_position.x + "," + this.mouse_position.y);
 
     let b = { x: 10, y: 0 };
 

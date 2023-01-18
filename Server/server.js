@@ -84,6 +84,10 @@ function Receive(socket) {
     socket.on("build", (hexCord) => {
       Storage.PlayerList[socket.id].build(hexCord);
     });
+
+    socket.on("update_screen", (screenPosition) => {
+      Storage.PlayerList[socket.id].screenCenter = screenPosition;
+    });
     socket.on("disconnect", () => {
       console.log("disconnect");
     });

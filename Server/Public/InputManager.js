@@ -1,4 +1,4 @@
-import { app, socket, socket_id } from "./App.js";
+import { app, socket, socket_id, ratio_x, ratio_y, ratio } from "./App.js";
 
 import Storage from "./Storage.js";
 import UI from "./Ui.js";
@@ -13,7 +13,7 @@ class InputManager {
     this.mouseMoving = false;
     this.mousePosition = { x: 0, y: 0 };
     this.mouseScreenPosition = { x: 0, y: 0 };
-    this.selectedHex = { x: 0, y: 0 };
+    this.selectedHex = Grid.map[[0, 0]];
     this.showMode = false;
     this.showBuilding = "none";
     window.addEventListener("keydown", (e) => this.KeyPressed(e));
@@ -42,6 +42,15 @@ class InputManager {
     this.initialized = true;
   }
   OnMouseDown(e) {
+    // console.log(ratio_x);
+    //console.log(e.clientX / ratio_x + "," + e.clientY / ratio_y);
+    // a
+    // console.log(Storage.PlayerList[socket_id].position.x);
+    // console.log(app.stage.position.x);
+    // console.log(e.clientX / ratio);
+    console.log(this.mouseScreenPosition);
+    console.log(e.clientX);
+
     if (this.showMode) {
       UI.SelectSlot(
         UI.active_slot,
@@ -249,17 +258,29 @@ class InputManager {
   }
   OnMouseMove(e) {
     this.mouseMoving = true;
-    this.mousePosition = this.GetWorldPoint(e.clientX, e.clientY);
+    //this.mousePosition = this.GetWorldPoint(e.clientX, e.clientY);
+    //console.log("ScreenPOS: " + e.clientX + "," + e.clientY);
     //console.log(this.mousePosition);
-    this.mouseScreenPosition = { x: e.clientX, y: e.clientY };
+    this.mouseScreenPosition = {
+      x: e.clientX / ratio,
+      y: e.clientY / ratio,
+    };
 
     if (socket_id !== "")
-      socket.emit("hero_rotation", { x: e.clientX, y: e.clientY });
+      socket.emit("hero_rotation", {
+        x: e.clientX,
+        y: e.clientY,
+      });
   }
   GetWorldPoint(x, y) {
+    //console.log("STAGE:", app.stage.position);
     return {
-      x: Storage.PlayerList[socket_id].position.x - (app.stage.position.x - x),
-      y: Storage.PlayerList[socket_id].position.y - (app.stage.position.y - y),
+      x:
+        Storage.PlayerList[socket_id].position.x -
+        (app.stage.position.x / ratio - x),
+      y:
+        Storage.PlayerList[socket_id].position.y -
+        (app.stage.position.y / ratio - y),
     };
   }
   SwitchMode() {
@@ -273,18 +294,50 @@ class InputManager {
     //console.log(this.selectedHex);
   }
   UpdateMouse() {
-    if (!this.mouseMoving) {
+    if (this.mouseMoving) {
       this.mousePosition = this.GetWorldPoint(
         this.mouseScreenPosition.x,
         this.mouseScreenPosition.y
       );
     }
+
     //console.log(this.mousePosition);
     this.mouseMoving = false;
   }
   SelectHex() {
-    //console.log(ui.active_slot);
+    //console.log(this.mousePosition.x);
     if (!this.mode) {
+      // let mouseCollider = new SAT.Vector(
+      //   this.mousePosition.x,
+      //   this.mousePosition.y
+      // );
+
+      // if (this.selectedHex.IsCollide(mouseCollider)) return;
+
+      // let cord_x = Math.floor(
+      //   this.mousePosition.x / (Grid.map[[0, 0]].edgeLength * 1.5)
+      // );
+      // let cord_y = Math.floor(this.mousePosition.y / (Grid.map[[0, 0]].h * 2));
+
+      // //console.log(cord_x + "," + cord_y);
+      // let selectHex;
+
+      // if (Grid.map[[cord_x, cord_y]].IsCollide(mouseCollider)) {
+      //   this.selectedHex = Grid.map[[cord_x, cord_y]];
+      //   selectHex = { x: cord_x, y: cord_y };
+      //   console.log(selectHex);
+      //   return;
+      // } else {
+      //   Grid.map[[cord_x, cord_y]].neighbours.forEach((hex) => {
+      //     if (Grid.map[[hex.x, hex.y]].IsCollide(mouseCollider)) {
+      //       this.selectedHex = Grid.map[[hex.x, hex.y]];
+      //       selectHex = { x: hex.x, y: hex.y };
+      //       console.log(selectHex);
+      //       return;
+      //     }
+      //   });
+      // }
+
       for (let i = 0; i < 30; i++) {
         for (let j = 0; j < 30; j++) {
           if (
@@ -293,6 +346,7 @@ class InputManager {
             )
           )
             this.selectedHex = Grid.map[[i, j]];
+          // console.log(this.selectedHex.position);
         }
       }
     }

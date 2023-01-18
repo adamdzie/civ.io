@@ -24,7 +24,8 @@ class Grid {
           { x: i, y: j },
           map[[i, j]].building,
           map[[i, j]].hexOwner,
-          map[[i, j]].whoBuilds
+          map[[i, j]].whoBuilds,
+          map[[i, j]].neighbours
         );
       }
     }

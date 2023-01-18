@@ -1,3 +1,7 @@
+export let ratio_x = 1;
+export let ratio_y = 1;
+export let ratio = 1;
+
 import { Player } from "./Player.js";
 import Grid from "./Grid.js";
 import Storage from "./Storage.js";
@@ -13,7 +17,7 @@ import View from "./View.js";
 
 //var SAT = require("sat");
 
-export const socket = io("http://25.22.175.22:3000");
+export const socket = io("http://localhost:3000");
 //export const socket = io("http://localhost:3000");
 
 export var socket_id = "";
@@ -51,6 +55,7 @@ socket.on("initialize", async (players, _socketId, grid) => {
   ShowConstruction.initialize();
   InputManager.initialize();
   UI.initialize();
+  resize();
   initiated = true;
 });
 
@@ -86,11 +91,15 @@ socket.on("Building_complete", (hexCord) => {
 });
 
 const Application = PIXI.Application;
+//2400
+//1250
 
-const GAME_WIDTH = 2400;
-const GAME_HEIGHT = 1250;
-console.log(window.devicePixelRatio);
-console.log(window.screen.width);
+//1600
+//900
+const GAME_WIDTH = 1600 * window.devicePixelRatio;
+const GAME_HEIGHT = 900 * window.devicePixelRatio;
+//console.log(window.devicePixelRatio);
+//console.log(window.screen.width);
 
 export const app = new Application({
   width: GAME_WIDTH,
@@ -101,6 +110,7 @@ export const app = new Application({
   antialias: true,
   resolution: window.devicePixelRatio,
   autoResize: true,
+  //ROUND_PIXELS: true,
   //resolution: 1,
 });
 
@@ -109,8 +119,6 @@ app.renderer.backgroundColor = 0xaaaaaa;
 app.renderer.view.style.position = "absolute";
 app.renderer.view.style.top = "0px";
 app.renderer.view.style.left = "0px";
-
-resize();
 
 document.body.appendChild(app.view);
 
@@ -129,6 +137,7 @@ export const Graphics = PIXI.Graphics;
 export const Text = PIXI.Text;
 export const Container = PIXI.Container;
 export const Sprite = PIXI.Sprite;
+
 //app.view.style.width = app.renderer.width + "px";
 //app.view.style.height = app.renderer.height + "px";
 // let collider = new SAT.Polygon(new SAT.Vector(0, 0), [
@@ -140,6 +149,7 @@ export const Sprite = PIXI.Sprite;
 //   new SAT.Vector(70, 242.48),
 // ]);
 
+app.stage.addChild(View.container);
 const cull = new PIXI.Cull().addAll(app.stage.children);
 
 app.ticker.add((delta) => loop(delta));
@@ -153,9 +163,10 @@ function loop(delta) {
   for (var key in Storage.PlayerList) {
     Storage.PlayerList[key].update(app.ticker.deltaMS);
   }
-
-  app.stage.pivot.x = Storage.PlayerList[socket_id].sprite.x;
-  app.stage.pivot.y = Storage.PlayerList[socket_id].sprite.y;
+  View.container.pivot.x = Storage.PlayerList[socket_id].sprite.x;
+  View.container.pivot.y = Storage.PlayerList[socket_id].sprite.y;
+  // app.stage.pivot.x = Storage.PlayerList[socket_id].sprite.x;
+  // app.stage.pivot.y = Storage.PlayerList[socket_id].sprite.y;
 
   UI.update();
   InputManager.Update();
@@ -184,15 +195,18 @@ function loop(delta) {
 
 function resize() {
   // Determine which screen dimension is most constrained
-  let ratio = Math.max(
+  ratio = Math.max(
     window.innerWidth / GAME_WIDTH,
     window.innerHeight / GAME_HEIGHT
   );
 
-  let ratio_x = window.innerWidth / GAME_WIDTH;
-  let ratio_y = window.innerHeight / GAME_HEIGHT;
+  ratio_x = window.innerWidth / GAME_WIDTH;
+  ratio_y = window.innerHeight / GAME_HEIGHT;
+
   // Scale the view appropriately to fill that dimension
-  app.stage.scale.x = app.stage.scale.y = ratio;
+  // app.stage.scale.x = app.stage.scale.y = ratio;
+
+  View.container.scale.x = View.container.scale.y = ratio;
 
   // Update the renderer dimensions
   app.renderer.resize(
@@ -200,8 +214,31 @@ function resize() {
     Math.ceil(GAME_HEIGHT * ratio_y)
     //Math.ceil(GAME_HEIGHT * ratio)
   );
-  console.log(app.renderer.width);
+  // View.container.pivot.x = app.renderer.width / 2;
+  // View.container.pivot.y = app.renderer.height / 2;
+  //console.log(app.renderer.width);
+  // View.container.x = app.renderer.width / 2;
+  // View.container.y = app.renderer.height / 2;
+
+  // View.container.x = app.stage.pivot.x;
+  // View.container.y = app.stage.pivot.y;
+
   app.stage.position.x = app.renderer.width / 2;
   app.stage.position.y = app.renderer.height / 2;
+
+  //app.stage.position.x = window.innerWidth / 2;
+  //app.stage.position.y = window.innerHeight / 2;
+
+  //console.log(app.stage.position.y);
+  socket.emit("update_screen", {
+    x: app.stage.position.x,
+    y: app.stage.position.y,
+  });
+
+  UI.Resize();
+  console.log(window.innerWidth / 2);
+  console.log(app.stage.position.x);
+  // app.stage.position.x = View.container.width / 2;
+  // app.stage.position.y = View.container.height / 2;
   //app.renderer.height = GAME_HEIGHT;
 }
