@@ -4,13 +4,12 @@ import Resources from "../Resources.js";
 import Storage from "../Storage.js";
 import View from "../View.js";
 class Building {
-  constructor(ownerId, hexCord, type, isBuilt, ownedHexes) {
+  constructor(ownerId, hexCord, type, isBuilt) {
     this.ownerId = ownerId;
     this.hexCord = hexCord;
     this.isBuilt = isBuilt;
     this.hexWidth = Grid.map[[0, 0]].edgeLength * 2;
     this.hexHeight = Grid.map[[0, 0]].h * 2;
-    this.ownedHexes = ownedHexes;
 
     this.constructionSprite = new PIXI.Sprite(Resources.assets["Construction"]);
 
@@ -56,11 +55,6 @@ class Building {
   }
   complete() {
     this.isBuilt = true;
-
-    this.ownedHexes.forEach((hex) => {
-      Grid.map[[hex.x, hex.y]].hexOwner = this.ownerId;
-      Grid.map[[hex.x, hex.y]].displayHexOwnage();
-    });
 
     this.container.removeChild(this.constructionSprite);
     this.constructionSprite = null;

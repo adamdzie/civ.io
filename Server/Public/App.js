@@ -82,6 +82,7 @@ socket.on("hero_rotation", (args) => {
 });
 
 socket.on("build", (args) => {
+  console.log(args[3]);
   if (!initiated) return;
   BuildingFactory.Build(args[0], args[1], args[2], false, args[3]);
 });

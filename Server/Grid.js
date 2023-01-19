@@ -4,6 +4,7 @@ const Functions = require("./Functions.js");
 
 class Grid {
   constructor(width, height, edgeLength, borderWidth) {
+    //console.log(Functions.getRing({ x: 4, y: 4 }, 2));
     this.map = {};
     this.width = width;
     this.height = height;

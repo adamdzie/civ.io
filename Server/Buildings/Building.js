@@ -10,7 +10,6 @@ class Building {
     this.hexCord = hexCord;
     this.type = type;
 
-    this.ownedHexes = [hexCord];
     //this.hexWidth = map.map[[0, 0]].edgeLength * 2;
     //this.hexHeight = map.map[[0, 0]].h * 2;
 
@@ -27,14 +26,6 @@ class Building {
       Constants.REFRESH_INTERVAL / 1000,
       buildTime
     );
-
-    console.log("Wysyłamy");
-    sendToAll("build", [
-      this.ownerId,
-      this.type,
-      this.hexCord,
-      this.ownedHexes,
-    ]);
 
     let _buildInterval = setInterval(() => {
       if (buildingCompletePercentage + addPercent >= 100)
@@ -59,6 +50,7 @@ class Building {
     sendToAll("Building_complete", this.hexCord);
     //console.log(this);
   }
+  SendBuild() {}
 }
 
 module.exports = Building;
