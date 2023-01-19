@@ -4,6 +4,7 @@ import InputManager from "./InputManager.js";
 import Resources from "./Resources.js";
 import BuildingFactory from "./Buildings/BuildingFactory.js";
 import View from "./View.js";
+import Grid from "./Grid.js";
 
 export class Hex {
   constructor(
@@ -28,6 +29,7 @@ export class Hex {
     this.hexOwner = hexOwner;
     this.whoBuilds = whoBuilds;
     this.neighbours = neighbours;
+    this.building = "none";
 
     this.points = points;
     //var v = new SAT.Vector(10, 10);
@@ -50,6 +52,59 @@ export class Hex {
       .lineTo(this.points[8], this.points[9])
       .lineTo(this.points[10], this.points[11])
       .lineTo(this.points[0], this.points[1]);
+
+    this.borderTopLeft = new Graphics();
+    this.borderTopLeft
+      .lineStyle(3, 0x000000, 1)
+      .moveTo(this.points[0], this.points[1])
+      .lineTo(this.points[2], this.points[3]);
+
+    this.borderTop = new Graphics();
+    this.borderTop
+      .lineStyle(3, 0x000000, 1)
+      .moveTo(this.points[2], this.points[3])
+      .lineTo(this.points[4], this.points[5]);
+
+    this.borderTopRight = new Graphics();
+    this.borderTopRight
+      .lineStyle(3, 0x000000, 1)
+      .moveTo(this.points[4], this.points[5])
+      .lineTo(this.points[6], this.points[7]);
+
+    this.borderBottomRight = new Graphics();
+    this.borderBottomRight
+      .lineStyle(3, 0x000000, 1)
+      .moveTo(this.points[6], this.points[7])
+      .lineTo(this.points[8], this.points[9]);
+
+    this.borderBottom = new Graphics();
+    this.borderBottom
+      .lineStyle(3, 0x000000, 1)
+      .moveTo(this.points[8], this.points[9])
+      .lineTo(this.points[10], this.points[11]);
+
+    this.borderBottomLeft = new Graphics();
+    this.borderBottomLeft
+      .lineStyle(3, 0x000000, 1)
+      .moveTo(this.points[10], this.points[11])
+      .lineTo(this.points[0], this.points[1]);
+
+    this.border_array = [
+      this.borderTopLeft,
+      this.borderTop,
+      this.borderTopRight,
+      this.borderBottomRight,
+      this.borderBottom,
+      this.borderBottomLeft,
+    ];
+
+    this.activeBorders = {};
+    this.activeBorders["top-left"] = false;
+    this.activeBorders["top"] = false;
+    this.activeBorders["top-right"] = false;
+    this.activeBorders["bottom-right"] = false;
+    this.activeBorders["bottom"] = false;
+    this.activeBorders["bottom-left"] = false;
 
     this.terrainType = terrainType;
     this.terrainObstacle = terrainObstacle;
@@ -153,6 +208,74 @@ export class Hex {
       this.ownerSprite = new PIXI.Sprite(Resources.assets["Hex_mask_owner"]);
       this.ownerSprite.zIndex = 3;
       this.container.addChild(this.ownerSprite);
+    }
+  }
+  drawBorders() {
+    for (let i = 0; i < this.neighbours.length; i++) {
+      let border = this.getCurrentBorder(i);
+
+      if (this.neighbours[i] !== "none") {
+        if (
+          Grid.map[[this.neighbours[i].x, this.neighbours[i].y]].hexOwner !==
+          this.hexOwner
+        ) {
+          View.Add([this.border_array[i]]);
+          this.activeBorders[border] = true;
+        }
+      } else {
+        View.Add([this.border_array[i]]);
+      }
+    }
+  }
+  updateNeighbours() {
+    for (let i = 0; i < this.neighbours.length; i++) {
+      let border = this.getReverseBorder(i);
+
+      if (this.neighbours[i] !== "none") {
+        if (
+          Grid.map[[this.neighbours[i].x, this.neighbours[i].y]].hexOwner ===
+          this.hexOwner
+        )
+          Grid.map[[this.neighbours[i].x, this.neighbours[i].y]].disableBorder(
+            border
+          );
+      }
+    }
+  }
+  getCurrentBorder(i) {
+    let border = "";
+    if (i === 0) border = "top-left";
+    if (i === 1) border = "top";
+    if (i === 2) border = "top-right";
+    if (i === 3) border = "bottom-right";
+    if (i === 4) border = "bottom";
+    if (i === 5) border = "bottom-left";
+    return border;
+  }
+  getReverseBorder(i) {
+    let border = "";
+    if (i === 0) border = "bottom-right";
+    if (i === 1) border = "bottom";
+    if (i === 2) border = "bottom-left";
+    if (i === 3) border = "top-left";
+    if (i === 4) border = "top";
+    if (i === 5) border = "top-right";
+    return border;
+  }
+  borderToIndex(border) {
+    let index = 0;
+    if (border === "top-left") index = 0;
+    if (border === "top") index = 1;
+    if (border === "top-right") index = 2;
+    if (border === "bottom-right") index = 3;
+    if (border === "bottom") index = 4;
+    if (border === "bottom-left") index = 5;
+    return index;
+  }
+  disableBorder(border) {
+    if (this.activeBorders[border]) {
+      this.activeBorders[border] = false;
+      View.Remove([this.border_array[this.borderToIndex(border)]]);
     }
   }
 }

@@ -71,11 +71,10 @@ class Player {
     this.isRotating = true;
   }
   build(hexCord) {
-    console.log(typeof City);
-    console.log(hexCord);
     Grid.map[[hexCord.x, hexCord.y]].building = 0;
     Grid.map[[hexCord.x, hexCord.y]].whoBuilds = this.id;
     this.buildings[[hexCord.x, hexCord.y]] = new City(this.id, hexCord);
+    //console.log(this.buildings[[hexCord.x, hexCord.y]].hexCord);
   }
 }
 

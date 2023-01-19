@@ -82,6 +82,7 @@ function Receive(socket) {
     });
 
     socket.on("build", (hexCord) => {
+      console.log(hexCord);
       Storage.PlayerList[socket.id].build(hexCord);
     });
 

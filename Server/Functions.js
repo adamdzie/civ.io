@@ -40,7 +40,7 @@ function getRing(hexCord, range) {
       if (existOnMap(hexCord.x + 1, hexCord.y))
         neighbours.push({ x: hexCord.x + 1, y: hexCord.y });
       if (existOnMap(hexCord.x, hexCord.y - 1))
-        neighbours.push({ x: hexCord.x, y: hexCord.y + 1 });
+        neighbours.push({ x: hexCord.x, y: hexCord.y - 1 });
       if (existOnMap(hexCord.x - 1, hexCord.y))
         neighbours.push({ x: hexCord.x - 1, y: hexCord.y });
     } else {
@@ -81,7 +81,7 @@ function getRing(hexCord, range) {
     pointer.x--;
     switchY++;
   }
-  console.log("MAIN HEX: " + pointer.x + "," + pointer.y);
+
   //GET HEXES ON LEFT EDGE
   let leftEdge = [];
   for (let i = 0; i < range + 1; i++) {
@@ -135,8 +135,6 @@ function getRing(hexCord, range) {
     width_x += 2;
   }
 
-  console.log(bottomRightEdge);
-
   neighbours = neighbours.concat(
     leftEdge,
     rightEdge,
@@ -151,6 +149,7 @@ function getRing(hexCord, range) {
   }
 
   neighbours = neighbours.filter(Object);
+
   return neighbours;
 }
 

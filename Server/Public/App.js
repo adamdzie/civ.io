@@ -82,13 +82,23 @@ socket.on("hero_rotation", (args) => {
 });
 
 socket.on("build", (args) => {
-  console.log(args[3]);
   if (!initiated) return;
-  BuildingFactory.Build(args[0], args[1], args[2], false, args[3]);
+  Grid.map[[args[2].x, args[2].y]].building = BuildingFactory.Build(
+    args[0],
+    args[1],
+    args[2],
+    false,
+    args[3]
+  );
+  //console.log(Grid.map[[args[2].x, args[2].y]].building);
 });
 
 socket.on("Building_complete", (hexCord) => {
   Grid.map[[hexCord.x, hexCord.y]].building.complete();
+});
+
+socket.on("city_grow", (args) => {
+  Grid.map[[args[0].x, args[0].y]].building.grow(args[1]);
 });
 
 const Application = PIXI.Application;
@@ -97,8 +107,10 @@ const Application = PIXI.Application;
 
 //1600
 //900
-const GAME_WIDTH = 1600 * window.devicePixelRatio;
-const GAME_HEIGHT = 900 * window.devicePixelRatio;
+// const GAME_WIDTH = 1600 * window.devicePixelRatio;
+// const GAME_HEIGHT = 900 * window.devicePixelRatio;
+const GAME_WIDTH = 1600;
+const GAME_HEIGHT = 900;
 //console.log(window.devicePixelRatio);
 //console.log(window.screen.width);
 
@@ -206,7 +218,7 @@ function resize() {
 
   // Scale the view appropriately to fill that dimension
   // app.stage.scale.x = app.stage.scale.y = ratio;
-
+  ratio -= 0.5;
   View.container.scale.x = View.container.scale.y = ratio;
 
   // Update the renderer dimensions

@@ -43,8 +43,6 @@ class Building {
 
     View.Add([this.container]);
 
-    Grid.map[[hexCord.x, hexCord.y]].building = this;
-
     Storage.PlayerList[this.ownerId].buildings[
       [this.hexCord.x, this.hexCord.y]
     ] = this;
@@ -62,6 +60,7 @@ class Building {
     this.container.addChild(this.sprite);
     this.container.addChild(this.nameSprite);
   }
+  grow() {}
 }
 
 export default Building;

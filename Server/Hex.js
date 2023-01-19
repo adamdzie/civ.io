@@ -38,6 +38,7 @@ class Hex {
       this.position.y + this.h * 2,
     ];
 
+    //const cords = Object.assign({}, this.hexCord);
     this.neighbours = [];
 
     //EVEN

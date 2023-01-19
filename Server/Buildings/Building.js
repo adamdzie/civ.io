@@ -48,9 +48,9 @@ class Building {
       ].isBuilt
     );
     sendToAll("Building_complete", this.hexCord);
-    //console.log(this);
   }
   SendBuild() {}
+  StartGrowing() {}
 }
 
 module.exports = Building;
