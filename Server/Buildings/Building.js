@@ -3,6 +3,7 @@ const Functions = require("../Functions.js");
 const Grid = require("../Grid.js");
 const { sendToAll } = require("../Utils/Socket-io.js");
 const Storage = require("../Storage.js");
+const Sender = require("../Utils/Sender.js");
 
 class Building {
   constructor(ownerId, hexCord, type) {
@@ -47,7 +48,13 @@ class Building {
         [this.hexCord.x, this.hexCord.y]
       ].isBuilt
     );
-    sendToAll("Building_complete", this.hexCord);
+    // Sender.queue.enqueue({
+    //   type: 0,
+    //   namespace: "Building_complete",
+    //   args: [this.hexCord],
+    // });
+    const cords = Object.assign({}, this.hexCord);
+    sendToAll("Building_complete", [cords]);
   }
   SendBuild() {}
   StartGrowing() {}

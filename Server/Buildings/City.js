@@ -2,11 +2,12 @@ const Building = require("./Building.js");
 const Grid = require("../Grid.js");
 const { sendToAll } = require("../Utils/Socket-io.js");
 const Functions = require("../Functions.js");
+const Sender = require("../Utils/Sender.js");
 class City extends Building {
   constructor(ownerId, hexCord) {
     super(ownerId, hexCord, 0);
     this.ownedHexes = [hexCord];
-    this.time_growth = 2000;
+    this.time_growth = 20000;
     this.ownedHexes = this.ownedHexes.concat(
       Functions.getNeighbours(hexCord, 1)
     );
@@ -56,7 +57,13 @@ class City extends Building {
         this.ownedHexes.push(growHexCord);
         Grid.map[[growHexCord.x, growHexCord.y]].ownerId = this.ownerId;
 
-        sendToAll("city_grow", [this.hexCord, growHexCord]);
+        // Sender.queue.enqueue({
+        //   type: 0,
+        //   namespace: "city_grow",
+        //   args: [this.hexCord, growHexCord],
+        // });
+        const cords = Object.assign({}, this.hexCord);
+        sendToAll("city_grow", [cords, growHexCord]);
 
         delete this.first_ring[hexToGrow];
         this.first_ring = this.first_ring.filter(Object);
@@ -70,7 +77,14 @@ class City extends Building {
         this.ownedHexes.push(growHexCord);
         Grid.map[[growHexCord.x, growHexCord.y]].ownerId = this.ownerId;
 
-        sendToAll("city_grow", [this.hexCord, growHexCord]);
+        // Sender.queue.enqueue({
+        //   type: 0,
+        //   namespace: "city_grow",
+        //   args: [this.hexCord, growHexCord],
+        // });
+        const cords = Object.assign({}, this.hexCord);
+        //sendToAll("city_grow", [cords, growHexCord]);
+        //sendToAll("city_grow", [cords, growHexCord]);
 
         delete this.second_ring[hexToGrow];
         this.second_ring = this.second_ring.filter(Object);

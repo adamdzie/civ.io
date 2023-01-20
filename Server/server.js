@@ -15,6 +15,15 @@ const Storage = require("./Storage.js");
 const Grid = require("./Grid.js");
 //const City = require("./Buildings/City.js");
 const Timer = require("./Utils/Timer.js");
+const Sender = require("./Utils/Sender.js");
+const Serializer = require("./Utils/Serializer.js");
+const Deserializer = require("./Utils/Deserializer.js");
+
+const sth = { x: 5, y: -2 };
+
+let buf = Serializer.MovementInput(sth.x, sth.y);
+
+console.log(Deserializer.MovementInput(buf));
 
 socketConnection(server);
 
@@ -54,6 +63,7 @@ function update() {
       //io.emit("hero_rotation", key, time, Storage.PlayerList[key].rotation);
     }
   }
+  //Sender.execute();
   //console.log("Czas trwania petli: ", time - Date.now());
 }
 
@@ -71,7 +81,10 @@ function Receive(socket) {
       Storage.PlayerList[socket.id]
     );
 
-    socket.on("movement", (move_vector) => {
+    socket.on("movement", (m_vector) => {
+      console.log(m_vector);
+      let move_vector = Deserializer.MovementInput(m_vector);
+
       Storage.PlayerList[socket.id].move_vector = move_vector;
       Storage.PlayerList[socket.id].setIsMoving();
     });

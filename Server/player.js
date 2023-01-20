@@ -3,6 +3,7 @@ const Grid = require("./Grid.js");
 
 class Player {
   constructor(_x, _y, radius, move_speed, screenCenter, id) {
+    this.initiated = false;
     this.id = id;
     this.position = { x: _x, y: _y };
     this.radius = radius;

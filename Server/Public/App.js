@@ -12,6 +12,7 @@ import ShowConstruction from "./ShowConstruction.js";
 import BuildingFactory from "./Buildings/BuildingFactory.js";
 import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 import View from "./View.js";
+
 // import { io } from "./socket.io-client";
 //import { Resource } from "pixi.js";
 
@@ -28,7 +29,6 @@ socket.on("connect", () => {});
 
 socket.on("initialize", async (players, _socketId, grid) => {
   socket_id = _socketId;
-
   Resources.initialize(grid.map[[0, 0]].points);
 
   await Grid.initialize(
@@ -40,7 +40,7 @@ socket.on("initialize", async (players, _socketId, grid) => {
   );
 
   for (var key in players) {
-    await Storage.Add(key, players[key]);
+    Storage.Add(key, players[key]);
     for (var cord in players[key].buildings) {
       BuildingFactory.Build(
         key,
@@ -93,11 +93,13 @@ socket.on("build", (args) => {
   //console.log(Grid.map[[args[2].x, args[2].y]].building);
 });
 
-socket.on("Building_complete", (hexCord) => {
-  Grid.map[[hexCord.x, hexCord.y]].building.complete();
+socket.on("Building_complete", (args) => {
+  if (!initiated) return;
+  Grid.map[[args[0].x, args[0].y]].building.complete();
 });
 
 socket.on("city_grow", (args) => {
+  if (!initiated) return;
   Grid.map[[args[0].x, args[0].y]].building.grow(args[1]);
 });
 
@@ -218,7 +220,7 @@ function resize() {
 
   // Scale the view appropriately to fill that dimension
   // app.stage.scale.x = app.stage.scale.y = ratio;
-  ratio -= 0.5;
+  //ratio -= 0.5;
   View.container.scale.x = View.container.scale.y = ratio;
 
   // Update the renderer dimensions

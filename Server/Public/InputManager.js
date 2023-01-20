@@ -4,6 +4,7 @@ import Storage from "./Storage.js";
 import UI from "./Ui.js";
 import ShowConstruction from "./ShowConstruction.js";
 import Grid from "./Grid.js";
+import Serializer from "./Utils/Serializer.js";
 
 class InputManager {
   constructor() {
@@ -254,7 +255,9 @@ class InputManager {
     if ((this.input.A && this.input.D) || (!this.input.A && !this.input.D))
       this.move_vector.x = 0;
 
-    socket.emit("movement", this.move_vector);
+    let mov = Serializer.MovementInput(this.move_vector.x, this.move_vector.y);
+    console.log(mov);
+    socket.emit("movement", mov);
   }
   OnMouseMove(e) {
     this.mouseMoving = true;
