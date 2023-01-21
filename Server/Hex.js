@@ -38,6 +38,10 @@ class Hex {
       this.position.y + this.h * 2,
     ];
 
+    if (hexCord.x === 0 && hexCord.y === 0) {
+      console.log(this.points);
+    }
+
     //const cords = Object.assign({}, this.hexCord);
     this.neighbours = [];
 
@@ -110,8 +114,7 @@ class Hex {
     this.terrainObstacle = "none";
     this.terrainResource = "none";
     this.building = "none";
-    this.hexOwner = "none";
-    this.whoBuilds = "none";
+    this.hexOwner = 0;
   }
 }
 

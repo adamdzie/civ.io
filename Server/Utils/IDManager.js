@@ -12,3 +12,6 @@ class IDManager {
     return this.available_id.dequeue();
   }
 }
+
+const singletonInstance = new IDManager();
+module.exports = singletonInstance;

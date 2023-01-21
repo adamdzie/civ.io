@@ -256,7 +256,7 @@ class InputManager {
       this.move_vector.x = 0;
 
     let mov = Serializer.MovementInput(this.move_vector.x, this.move_vector.y);
-    console.log(mov);
+
     socket.emit("movement", mov);
   }
   OnMouseMove(e) {

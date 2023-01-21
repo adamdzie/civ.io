@@ -18,7 +18,7 @@ const Timer = require("./Utils/Timer.js");
 const Sender = require("./Utils/Sender.js");
 const Serializer = require("./Utils/Serializer.js");
 const Deserializer = require("./Utils/Deserializer.js");
-
+const IDManager = require("./Utils/IDManager.js");
 const sth = { x: 5, y: -2 };
 
 let buf = Serializer.MovementInput(sth.x, sth.y);
@@ -71,10 +71,17 @@ function Receive(socket) {
   socket.on("initialize", (screenCenter) => {
     Storage.Add(
       socket.id,
-      new Player(100, 100, 35, 5, screenCenter, socket.id)
+      new Player(100, 100, 35, 5, screenCenter, IDManager.getId())
     );
 
-    socket.emit("initialize", Storage.PlayerList, socket.id, Grid);
+    let serialized_grid = Serializer.Grid(
+      Grid.width,
+      Grid.height,
+      Grid.edgeLength,
+      Grid.map
+    );
+
+    socket.emit("initialize", Storage.PlayerList, socket.id, serialized_grid);
     socket.broadcast.emit(
       "add_player",
       socket.id,

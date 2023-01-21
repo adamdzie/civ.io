@@ -12,6 +12,7 @@ import ShowConstruction from "./ShowConstruction.js";
 import BuildingFactory from "./Buildings/BuildingFactory.js";
 import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 import View from "./View.js";
+import Deserializer from "./Utils/Deserializer.js";
 
 // import { io } from "./socket.io-client";
 //import { Resource } from "pixi.js";
@@ -29,26 +30,30 @@ socket.on("connect", () => {});
 
 socket.on("initialize", async (players, _socketId, grid) => {
   socket_id = _socketId;
-  Resources.initialize(grid.map[[0, 0]].points);
 
+  Resources.initialize([
+    0, 121.2435565298214, 70, 0, 210, 0, 280, 121.2435565298214, 210,
+    242.4871130596428, 70, 242.4871130596428,
+  ]);
+
+  let deserialized_grid = Deserializer.Grid(grid);
   await Grid.initialize(
-    grid.width,
-    grid.height,
-    grid.edgeLength,
-    grid.borderWidth,
-    grid.map
+    deserialized_grid.width,
+    deserialized_grid.height,
+    deserialized_grid.edgeLength,
+    deserialized_grid.map
   );
 
   for (var key in players) {
     Storage.Add(key, players[key]);
     for (var cord in players[key].buildings) {
-      BuildingFactory.Build(
-        key,
-        players[key].buildings[cord].type,
-        players[key].buildings[cord].hexCord,
-        players[key].buildings[cord].isBuilt,
-        players[key].buildings[cord].ownedHexes
-      );
+      // BuildingFactory.Build(
+      //   key,
+      //   players[key].buildings[cord].type,
+      //   players[key].buildings[cord].hexCord,
+      //   players[key].buildings[cord].isBuilt,
+      //   players[key].buildings[cord].ownedHexes
+      // );
     }
   }
 
