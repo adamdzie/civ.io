@@ -268,11 +268,11 @@ export class Hex {
     });
 
     this.ownerSprite = "none";
-    if (this.hexOwner !== 0) {
-      this.ownerSprite = new PIXI.Sprite(Resources.assets["Hex_mask_owner"]);
-      this.ownerSprite.zIndex = 3;
-      this.container.addChild(this.ownerSprite);
-    }
+    // if (this.hexOwner !== 0) {
+    //   this.ownerSprite = new PIXI.Sprite(Resources.assets["Hex_mask_owner"]);
+    //   this.ownerSprite.zIndex = 3;
+    //   this.container.addChild(this.ownerSprite);
+    // }
 
     this.container.sortableChildren = true;
     console.log(this.hexOwner);

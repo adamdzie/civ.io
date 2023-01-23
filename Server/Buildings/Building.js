@@ -4,6 +4,7 @@ const Grid = require("../Grid.js");
 const { sendToAll } = require("../Utils/Socket-io.js");
 const Storage = require("../Storage.js");
 const Sender = require("../Utils/Sender.js");
+const Serializer = require("../Utils/Serializer.js");
 
 class Building {
   constructor(ownerId, hexCord, type) {
@@ -43,18 +44,10 @@ class Building {
   }
   BuildingComplete() {
     this.isBuilt = true;
-    console.log(
-      Storage.PlayerList[this.ownerId].buildings[
-        [this.hexCord.x, this.hexCord.y]
-      ].isBuilt
-    );
-    // Sender.queue.enqueue({
-    //   type: 0,
-    //   namespace: "Building_complete",
-    //   args: [this.hexCord],
-    // });
-    const cords = Object.assign({}, this.hexCord);
-    sendToAll("Building_complete", [cords]);
+
+    //const cords = Object.assign({}, this.hexCord);
+    let buffer = Serializer.BuildingComplete(this.hexCord);
+    sendToAll("Building_complete", buffer);
   }
   SendBuild() {}
   StartGrowing() {}

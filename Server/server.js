@@ -21,10 +21,6 @@ const Deserializer = require("./Utils/Deserializer.js");
 const IDManager = require("./Utils/IDManager.js");
 const sth = { x: 5, y: -2 };
 
-let buf = Serializer.MovementInput(sth.x, sth.y);
-
-console.log(Deserializer.MovementInput(buf));
-
 socketConnection(server);
 
 app.use(express.static(__dirname + "/Public"));
@@ -47,19 +43,31 @@ myTimer.start();
 
 // TICK LOOP
 function update() {
+  let time = Date.now();
   for (var key in Storage.PlayerList) {
     if (Storage.PlayerList[key].isMoving) {
       Storage.PlayerList[key].move();
-      let time = Date.now();
+      time = Date.now();
       //console.log(time);
-      sendToAll("movement", [key, time, Storage.PlayerList[key].position]);
+      let _data = Serializer.Movement(
+        Storage.PlayerList[key].id,
+        time,
+        Storage.PlayerList[key].position
+      );
+      sendToAll("movement", _data);
       //io.emit("movement", key, time, Storage.PlayerList[key].position);
     }
 
     if (Storage.PlayerList[key].isRotating) {
       Storage.PlayerList[key].rotate();
-      let time = Date.now();
-      sendToAll("hero_rotation", [key, time, Storage.PlayerList[key].rotation]);
+      time = Date.now();
+
+      let _data = Serializer.Rotation(
+        Storage.PlayerList[key].id,
+        time,
+        Storage.PlayerList[key].rotation
+      );
+      sendToAll("hero_rotation", _data);
       //io.emit("hero_rotation", key, time, Storage.PlayerList[key].rotation);
     }
   }
@@ -69,41 +77,44 @@ function update() {
 
 function Receive(socket) {
   socket.on("initialize", (screenCenter) => {
-    Storage.Add(
-      socket.id,
-      new Player(100, 100, 35, 5, screenCenter, IDManager.getId())
-    );
+    let id = IDManager.getId();
+    Storage.Add(socket.id, new Player(100, 100, 35, 5, screenCenter, id));
 
-    let serialized_grid = Serializer.Grid(
+    let _data = Serializer.Initialize(
       Grid.width,
       Grid.height,
       Grid.edgeLength,
-      Grid.map
+      Grid.map,
+      Storage.PlayerList,
+      id
     );
 
-    socket.emit("initialize", Storage.PlayerList, socket.id, serialized_grid);
-    socket.broadcast.emit(
-      "add_player",
-      socket.id,
-      Storage.PlayerList[socket.id]
+    let _data_player = Serializer.AddPlayer(
+      id,
+      Storage.PlayerList[socket.id].position.x,
+      Storage.PlayerList[socket.id].position.y,
+      Storage.PlayerList[socket.id].rotation
     );
+
+    socket.emit("initialize", _data);
+    socket.broadcast.emit("add_player", _data_player);
 
     socket.on("movement", (m_vector) => {
-      console.log(m_vector);
-      let move_vector = Deserializer.MovementInput(m_vector);
+      let move_vector = Deserializer.Movement(m_vector);
 
       Storage.PlayerList[socket.id].move_vector = move_vector;
       Storage.PlayerList[socket.id].setIsMoving();
     });
 
-    socket.on("hero_rotation", (mouse_pos) => {
-      Storage.PlayerList[socket.id].mouse_position = mouse_pos;
+    socket.on("hero_rotation", (_data) => {
+      let data = Deserializer.Rotation(_data);
+      Storage.PlayerList[socket.id].mouse_position = data;
       Storage.PlayerList[socket.id].setIsRotating();
     });
 
-    socket.on("build", (hexCord) => {
-      console.log(hexCord);
-      Storage.PlayerList[socket.id].build(hexCord);
+    socket.on("build", (_data) => {
+      let data = Deserializer.Build(_data);
+      Storage.PlayerList[socket.id].build(data.hexCord, data.type);
     });
 
     socket.on("update_screen", (screenPosition) => {

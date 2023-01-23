@@ -13,6 +13,7 @@ import BuildingFactory from "./Buildings/BuildingFactory.js";
 import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 import View from "./View.js";
 import Deserializer from "./Utils/Deserializer.js";
+import { getRing } from "./Utils/Functions.js";
 
 // import { io } from "./socket.io-client";
 //import { Resource } from "pixi.js";
@@ -28,86 +29,93 @@ let initiated = false;
 
 socket.on("connect", () => {});
 
-socket.on("initialize", async (players, _socketId, grid) => {
-  socket_id = _socketId;
+socket.on("initialize", async (_data) => {
+  let data = Deserializer.Initialize(_data);
+  socket_id = data.id;
 
   Resources.initialize([
     0, 121.2435565298214, 70, 0, 210, 0, 280, 121.2435565298214, 210,
     242.4871130596428, 70, 242.4871130596428,
   ]);
 
-  let deserialized_grid = Deserializer.Grid(grid);
   await Grid.initialize(
-    deserialized_grid.width,
-    deserialized_grid.height,
-    deserialized_grid.edgeLength,
-    deserialized_grid.map
+    data.grid.width,
+    data.grid.height,
+    data.grid.edgeLength,
+    data.grid.map
   );
 
-  for (var key in players) {
-    Storage.Add(key, players[key]);
-    for (var cord in players[key].buildings) {
-      // BuildingFactory.Build(
-      //   key,
-      //   players[key].buildings[cord].type,
-      //   players[key].buildings[cord].hexCord,
-      //   players[key].buildings[cord].isBuilt,
-      //   players[key].buildings[cord].ownedHexes
-      // );
-    }
-  }
+  data.players.forEach((player) => {
+    Storage.Add(player.id, player);
+  });
+
+  console.log(data.cities);
+  data.cities.forEach((city) => {
+    Grid.map[[city.hexCord.x, city.hexCord.y]].building =
+      BuildingFactory.BuildCity(
+        city.ownerId,
+        city.hexCord,
+        city.isBuilt,
+        city.ownedHexes
+      );
+  });
+
+  data.buildings.forEach((building) => {
+    BuildingFactory.Build(building.ownerId, building.hexCord, building.isBuilt);
+  });
 
   ShowConstruction.initialize();
   InputManager.initialize();
   UI.initialize();
   resize();
   initiated = true;
-});
 
-socket.on("add_player", (id, player) => {
-  Storage.Add(id, player);
-});
+  socket.on("add_player", (_data) => {
+    let player = Deserializer.AddPlayer(_data);
+    Storage.Add(player.id, player);
+  });
 
-socket.on("movement", (args) => {
-  if (!initiated) return;
-  Storage.PlayerList[args[0]].HandleNewTick({
-    time: args[1],
-    x: args[2].x,
-    y: args[2].y,
+  socket.on("movement", (_data) => {
+    let data = Deserializer.Movement(_data);
+    Storage.PlayerList[data.id].HandleNewTick({
+      time: data.time,
+      x: data.position.x,
+      y: data.position.y,
+    });
+  });
+
+  socket.on("hero_rotation", (_data) => {
+    let data = Deserializer.Rotation(_data);
+    Storage.PlayerList[data.id].HandleNewRotationTick({
+      time: data.time,
+      angle: data.angle,
+    });
+  });
+
+  socket.on("build", (_data) => {
+    let data = Deserializer.Build(_data);
+
+    if (data.type === 0) {
+      console.log("HELLO IM BUILDING");
+      let ownedHexes = [data.hexCord];
+      ownedHexes = ownedHexes.concat(getRing(data.hexCord, 1));
+      Grid.map[[data.hexCord.x, data.hexCord.y]].building =
+        BuildingFactory.BuildCity(data.id, data.hexCord, false, ownedHexes);
+    }
+
+    //console.log(Grid.map[[args[2].x, args[2].y]].building);
+  });
+
+  socket.on("Building_complete", (_data) => {
+    let data = Deserializer.BuildingComplete(_data);
+    Grid.map[[data.x, data.y]].building.complete();
+  });
+
+  socket.on("city_grow", (_data) => {
+    let data = Deserializer.CityGrow(_data);
+    Grid.map[[data.hexCord.x, data.hexCord.y]].building.grow(data.growHexCord);
   });
 });
-
-socket.on("hero_rotation", (args) => {
-  //console.log("TO CZAS:" + time + "A TO ANGLE: " + rotation);
-  if (!initiated) return;
-  Storage.PlayerList[args[0]].HandleNewRotationTick({
-    time: args[1],
-    angle: args[2],
-  });
-});
-
-socket.on("build", (args) => {
-  if (!initiated) return;
-  Grid.map[[args[2].x, args[2].y]].building = BuildingFactory.Build(
-    args[0],
-    args[1],
-    args[2],
-    false,
-    args[3]
-  );
-  //console.log(Grid.map[[args[2].x, args[2].y]].building);
-});
-
-socket.on("Building_complete", (args) => {
-  if (!initiated) return;
-  Grid.map[[args[0].x, args[0].y]].building.complete();
-});
-
-socket.on("city_grow", (args) => {
-  if (!initiated) return;
-  Grid.map[[args[0].x, args[0].y]].building.grow(args[1]);
-});
-
 const Application = PIXI.Application;
 //2400
 //1250

@@ -5,12 +5,7 @@ class Storage {
     this.PlayerList = new Object();
   }
   Add(key, player) {
-    this.PlayerList[key] = new Player(
-      player.position,
-      player.radius,
-
-      player.move_speed
-    );
+    this.PlayerList[key] = new Player(player.position, player.rotation);
   }
   Remove(key) {
     delete this.PlayerList[key];

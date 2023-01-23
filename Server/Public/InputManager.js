@@ -43,14 +43,9 @@ class InputManager {
     this.initialized = true;
   }
   OnMouseDown(e) {
-    // console.log(ratio_x);
-    //console.log(e.clientX / ratio_x + "," + e.clientY / ratio_y);
-    // a
-    // console.log(Storage.PlayerList[socket_id].position.x);
-    // console.log(app.stage.position.x);
-    // console.log(e.clientX / ratio);
-    console.log(this.mouseScreenPosition);
-    console.log(e.clientX);
+    let _data = Serializer.Build(this.selectedHex.hexCord, UI.active_slot);
+
+    socket.emit("build", _data);
 
     if (this.showMode) {
       UI.SelectSlot(
@@ -59,7 +54,6 @@ class InputManager {
         this.PickSlotCallback,
         this.UnpickSlotCallback
       );
-      socket.emit("build", this.selectedHex.hexCord);
     }
   }
   KeyPressed(e) {
@@ -269,11 +263,10 @@ class InputManager {
       y: e.clientY / ratio,
     };
 
-    if (socket_id !== "")
-      socket.emit("hero_rotation", {
-        x: e.clientX,
-        y: e.clientY,
-      });
+    if (socket_id !== "") {
+      let rot = Serializer.Rotation(e.clientX, e.clientY);
+      socket.emit("hero_rotation", rot);
+    }
   }
   GetWorldPoint(x, y) {
     //console.log("STAGE:", app.stage.position);

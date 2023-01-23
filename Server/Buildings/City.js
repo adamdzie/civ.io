@@ -3,6 +3,7 @@ const Grid = require("../Grid.js");
 const { sendToAll } = require("../Utils/Socket-io.js");
 const Functions = require("../Functions.js");
 const Sender = require("../Utils/Sender.js");
+const Serializer = require("../Utils/Serializer.js");
 class City extends Building {
   constructor(ownerId, hexCord) {
     super(ownerId, hexCord, 0);
@@ -28,13 +29,8 @@ class City extends Building {
     this.StartGrowing();
   }
   SendBuild() {
-    //console.log(this.hexCord);
-    sendToAll("build", [
-      this.ownerId,
-      this.type,
-      this.hexCord,
-      this.ownedHexes,
-    ]);
+    let _data = Serializer.Build(this.ownerId, this.type, this.hexCord);
+    sendToAll("build", _data);
   }
   initialize() {
     let cords = Object.assign({}, this.hexCord);
@@ -57,13 +53,9 @@ class City extends Building {
         this.ownedHexes.push(growHexCord);
         Grid.map[[growHexCord.x, growHexCord.y]].ownerId = this.ownerId;
 
-        // Sender.queue.enqueue({
-        //   type: 0,
-        //   namespace: "city_grow",
-        //   args: [this.hexCord, growHexCord],
-        // });
-        const cords = Object.assign({}, this.hexCord);
-        sendToAll("city_grow", [cords, growHexCord]);
+        let data = Serializer.CityGrow(this.hexCord, growHexCord);
+
+        sendToAll("city_grow", data);
 
         delete this.first_ring[hexToGrow];
         this.first_ring = this.first_ring.filter(Object);
@@ -77,14 +69,9 @@ class City extends Building {
         this.ownedHexes.push(growHexCord);
         Grid.map[[growHexCord.x, growHexCord.y]].ownerId = this.ownerId;
 
-        // Sender.queue.enqueue({
-        //   type: 0,
-        //   namespace: "city_grow",
-        //   args: [this.hexCord, growHexCord],
-        // });
-        const cords = Object.assign({}, this.hexCord);
-        //sendToAll("city_grow", [cords, growHexCord]);
-        //sendToAll("city_grow", [cords, growHexCord]);
+        let data = Serializer.CityGrow(this.hexCord, growHexCord);
+
+        sendToAll("city_grow", data);
 
         delete this.second_ring[hexToGrow];
         this.second_ring = this.second_ring.filter(Object);

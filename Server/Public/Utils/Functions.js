@@ -34,7 +34,7 @@ function getNeighbours(hexCord, range) {
   return neighbours;
 }
 
-function getRing(hexCord, range) {
+export function getRing(hexCord, range) {
   let odd = hexCord.x % 2 !== 0;
 
   let neighbours = [];

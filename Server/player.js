@@ -25,6 +25,7 @@ class Player {
     this.populationIncome = 0;
     this.amenities = 0;
 
+    this.cities = {};
     this.buildings = {};
   }
 
@@ -71,9 +72,14 @@ class Player {
   setIsRotating() {
     this.isRotating = true;
   }
-  build(hexCord) {
-    Grid.map[[hexCord.x, hexCord.y]].building = 0;
-    this.buildings[[hexCord.x, hexCord.y]] = new City(this.id, hexCord);
+  build(hexCord, type) {
+    Grid.map[[hexCord.x, hexCord.y]].building = type;
+    if (type === 0) {
+      this.cities[[hexCord.x, hexCord.y]] = new City(this.id, hexCord);
+    } else if (type === 1) {
+      //this.buildings..
+    }
+
     //console.log(this.buildings[[hexCord.x, hexCord.y]].hexCord);
   }
 }

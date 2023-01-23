@@ -3,11 +3,11 @@ import { Interpolator } from "./Interpolator.js";
 import View from "./View.js";
 
 export class Player extends Interpolator {
-  constructor(position, radius, move_speed, rotation) {
+  constructor(position, rotation) {
     super(position, rotation);
+
     this.position = position;
-    this.radius = radius;
-    this.move_speed = move_speed;
+
     this.buildings = {};
     this.citiesCords = {};
 
@@ -18,14 +18,6 @@ export class Player extends Interpolator {
     this.population = 0;
     this.populationIncome = 0;
     this.amenities = 0;
-
-    let circle = new Graphics();
-
-    circle
-      .beginFill(0x22aacc)
-      .lineStyle(3, 0x000000, 1)
-      .drawCircle(this.position.x, this.position.y, this.radius)
-      .endFill();
 
     var texture = PIXI.Texture.from("./Assets/Player/Hero.png");
 
