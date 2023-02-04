@@ -4,9 +4,10 @@ const { sendToAll } = require("../Utils/Socket-io.js");
 const Functions = require("../Functions.js");
 const Sender = require("../Utils/Sender.js");
 const Serializer = require("../Utils/Serializer.js");
+
 class City extends Building {
   constructor(ownerId, hexCord) {
-    super(ownerId, hexCord, 0);
+    super(ownerId, hexCord, 0, 1, 1, 1, 3);
     this.ownedHexes = [hexCord];
     this.time_growth = 20000;
     this.ownedHexes = this.ownedHexes.concat(
@@ -16,8 +17,6 @@ class City extends Building {
     this.second_ring = [];
 
     this.SendBuild();
-
-    //console.log(this.hexCord);
   }
   BuildingComplete() {
     super.BuildingComplete();

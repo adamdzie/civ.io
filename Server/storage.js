@@ -1,6 +1,7 @@
 class Storage {
   constructor() {
     this.PlayerList = new Object();
+    this.IdList = new Object();
   }
   Add(key, value) {
     this.PlayerList[key] = value;

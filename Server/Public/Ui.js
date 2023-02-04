@@ -3,6 +3,7 @@ import { app, socket_id, ratio, ratio_x, ratio_y } from "./App.js";
 import InputManager from "./InputManager.js";
 import Resources from "./Resources.js";
 import Storage from "./Storage.js";
+import { getQuantityString, getIncomeString } from "./Utils/Functions.js";
 
 class UI {
   constructor() {
@@ -396,6 +397,38 @@ class UI {
       this.combat_container.y =
       this.build_container.y =
         app.renderer.height / temp_ratio - 70;
+  }
+  UpdateResources() {
+    this.gold_quantity.text = getQuantityString(
+      Storage.PlayerList[socket_id].gold
+    );
+    this.gold_income.x = this.gold_quantity.x + this.gold_quantity.width;
+    this.science_quantity.text = getQuantityString(
+      Storage.PlayerList[socket_id].science
+    );
+    this.science_income.x =
+      this.science_quantity.x + this.science_quantity.width;
+    this.population_quantity.text = getQuantityString(
+      Storage.PlayerList[socket_id].population
+    );
+    this.population_income.x =
+      this.population_quantity.x + this.population_quantity.width;
+  }
+  UpdateAmenities() {
+    this.amenities_quantity.text =
+      Storage.PlayerList[socket_id].amenities.toString();
+  }
+  UpdateGoldIncome() {
+    this.gold_income.text =
+      "+" + Storage.PlayerList[socket_id].goldIncome.toString();
+  }
+  UpdateScienceIncome() {
+    this.science_income.text =
+      "+" + Storage.PlayerList[socket_id].scienceIncome.toString();
+  }
+  UpdatePopulationIncome() {
+    this.population_income.text =
+      "+" + Storage.PlayerList[socket_id].populationIncome.toString();
   }
 }
 

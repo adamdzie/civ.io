@@ -1,5 +1,23 @@
 import Grid from "../Grid.js";
 
+export function getQuantityString(value) {
+  if (value <= 999) return value.toString();
+
+  let final_string = "";
+  if (value >= 1000) {
+    let to_k = value / 1000;
+    final_string = to_k.toString();
+    if (final_string.length > 4 && to_k < 100) {
+      final_string = final_string.slice(0, 4);
+    } else {
+      final_string = final_string.slice(0, 3);
+    }
+    final_string += "k";
+  }
+  return final_string;
+}
+export function getIncomeString(value) {}
+
 export function existOnMap(x, y, width, height) {
   return x >= 0 && x < Grid.width && y >= 0 && y < Grid.height;
 }

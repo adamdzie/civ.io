@@ -1,6 +1,9 @@
 const City = require("./Buildings/City.js");
+const Bank = require("./Buildings/Bank.js");
 const Grid = require("./Grid.js");
-
+const { sendToAll, sendToClient } = require("./Utils/Socket-io.js");
+const Serializer = require("./Utils/Serializer.js");
+const IDManager = require("./Utils/IDManager.js");
 class Player {
   constructor(_x, _y, radius, move_speed, screenCenter, id) {
     this.initiated = false;
@@ -33,7 +36,14 @@ class Player {
     this.updateMovement(delta);
     console.log(this.position);
   }
-
+  day_update() {
+    this.refreshResources();
+  }
+  refreshResources() {
+    this.gold += this.goldIncome;
+    this.science += this.scienceIncome;
+    this.population += this.populationIncome;
+  }
   move() {
     if (this.move_vector.x === 0 && this.move_vector.y === 0) {
       this.isMoving = false;
@@ -77,10 +87,26 @@ class Player {
     if (type === 0) {
       this.cities[[hexCord.x, hexCord.y]] = new City(this.id, hexCord);
     } else if (type === 1) {
-      //this.buildings..
+      this.buildings[[hexCord.x, hexCord.y]] = new Bank(this.id, hexCord);
     }
 
     //console.log(this.buildings[[hexCord.x, hexCord.y]].hexCord);
+  }
+  amenitiesChangeCallback() {
+    let _data = Serializer.Amenities(this.amenities);
+    sendToClient("amenities", IDManager.ids[this.id], _data);
+  }
+  goldIncomeChangeCallback() {
+    let _data = Serializer.Income(this.goldIncome);
+    sendToClient("goldIncome", IDManager.ids[this.id], _data);
+  }
+  scienceIncomeChangeCallback() {
+    let _data = Serializer.Income(this.scienceIncome);
+    sendToClient("scienceIncome", IDManager.ids[this.id], _data);
+  }
+  populationIncomeChangeCallback() {
+    let _data = Serializer.Income(this.populationIncome);
+    sendToClient("populationIncome", IDManager.ids[this.id], _data);
   }
 }
 

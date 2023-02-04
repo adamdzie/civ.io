@@ -25,17 +25,22 @@ export class Player extends Interpolator {
 
     this.sprite = new PIXI.Sprite(texture);
 
-    this.sprite.x = position.x;
-    this.sprite.y = position.y;
-    //this.cont.x = position.x;
-    //this.cont.y = position.y;
-    this.sprite.anchor.x = 0.5;
-    this.sprite.anchor.y = 0.5;
+    // this.sprite.x = position.x;
+    // this.sprite.y = position.y;
+    this.cont.x = position.x;
+    this.cont.y = position.y;
+
+    // this.cont.anchor.x = 0.5;
+    // this.cont.anchor.y = 0.5;
+    // this.sprite.anchor.x = 0.5;
+    // this.sprite.anchor.y = 0.5;
     this.cont.addChild(this.sprite);
 
-    View.Add([this.sprite]);
+    View.Add([this.cont]);
     //app.stage.addChild(this.sprite);
     //this.sprite.angle = 0;
+    this.cont.pivot.x += 35;
+    this.cont.pivot.y += 35;
   }
 
   update(delta) {
@@ -45,14 +50,19 @@ export class Player extends Interpolator {
   }
   updatePosition() {
     this.position = this.currentPosition;
-    this.sprite.x = this.position.x;
-    this.sprite.y = this.position.y;
+    this.cont.x = this.position.x;
+    this.cont.y = this.position.y;
     //console.log(this.position);w
   }
   updateRotation() {
-    this.sprite.rotation = this.currentAngle;
+    this.cont.rotation = this.currentAngle;
   }
   setRotation(rotation) {
-    this.sprite.rotation = rotation;
+    this.cont.rotation = rotation;
+  }
+  updateResources(resources) {
+    this.gold = resources.gold;
+    this.science = resources.science;
+    this.population = resources.population;
   }
 }

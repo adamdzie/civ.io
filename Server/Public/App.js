@@ -95,13 +95,13 @@ socket.on("initialize", async (_data) => {
   socket.on("build", (_data) => {
     let data = Deserializer.Build(_data);
 
-    if (data.type === 0) {
-      console.log("HELLO IM BUILDING");
-      let ownedHexes = [data.hexCord];
-      ownedHexes = ownedHexes.concat(getRing(data.hexCord, 1));
-      Grid.map[[data.hexCord.x, data.hexCord.y]].building =
-        BuildingFactory.BuildCity(data.id, data.hexCord, false, ownedHexes);
-    }
+    console.log(data.type);
+    Grid.map[[data.hexCord.x, data.hexCord.y]].building = BuildingFactory.Build(
+      data.id,
+      data.type,
+      data.hexCord,
+      false
+    );
 
     //console.log(Grid.map[[args[2].x, args[2].y]].building);
   });
@@ -114,6 +114,42 @@ socket.on("initialize", async (_data) => {
   socket.on("city_grow", (_data) => {
     let data = Deserializer.CityGrow(_data);
     Grid.map[[data.hexCord.x, data.hexCord.y]].building.grow(data.growHexCord);
+  });
+  socket.on("resources", (_data) => {
+    let data = Deserializer.Resources(_data);
+
+    Storage.PlayerList[socket_id].updateResources(data);
+    UI.UpdateResources();
+  });
+
+  socket.on("amenities", (_data) => {
+    let data = Deserializer.Amenities(_data);
+
+    Storage.PlayerList[socket_id].amenities = data;
+
+    UI.UpdateAmenities();
+  });
+  socket.on("goldIncome", (_data) => {
+    let data = Deserializer.Income(_data);
+
+    Storage.PlayerList[socket_id].goldIncome = data;
+
+    UI.UpdateGoldIncome();
+  });
+
+  socket.on("scienceIncome", (_data) => {
+    let data = Deserializer.Income(_data);
+
+    Storage.PlayerList[socket_id].scienceIncome = data;
+
+    UI.UpdateScienceIncome();
+  });
+  socket.on("populationIncome", (_data) => {
+    let data = Deserializer.Income(_data);
+
+    Storage.PlayerList[socket_id].populationIncome = data;
+
+    UI.UpdatePopulationIncome();
   });
 });
 const Application = PIXI.Application;
@@ -191,8 +227,8 @@ function loop(delta) {
   for (var key in Storage.PlayerList) {
     Storage.PlayerList[key].update(app.ticker.deltaMS);
   }
-  View.container.pivot.x = Storage.PlayerList[socket_id].sprite.x;
-  View.container.pivot.y = Storage.PlayerList[socket_id].sprite.y;
+  View.container.pivot.x = Storage.PlayerList[socket_id].cont.x;
+  View.container.pivot.y = Storage.PlayerList[socket_id].cont.y;
   // app.stage.pivot.x = Storage.PlayerList[socket_id].sprite.x;
   // app.stage.pivot.y = Storage.PlayerList[socket_id].sprite.y;
 

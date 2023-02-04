@@ -176,6 +176,25 @@ class Deserializer {
       growHexCord: { x: dataview.getUint8(2), y: dataview.getUint8(3) },
     };
   }
+  static Resources(buffer) {
+    let dataview = new DataView(buffer);
+
+    return {
+      gold: dataview.getInt32(0),
+      science: dataview.getInt32(4),
+      population: dataview.getInt32(8),
+    };
+  }
+  static Amenities(buffer) {
+    let dataview = new DataView(buffer);
+
+    return dataview.getInt16(0);
+  }
+  static Income(buffer) {
+    let dataview = new DataView(buffer);
+
+    return dataview.getInt32(0);
+  }
 }
 
 export default Deserializer;

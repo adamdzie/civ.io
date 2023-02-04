@@ -28,6 +28,16 @@ class Enums {
     17: "Marble",
     18: "Sulfur",
   };
+  static buildings = {
+    0: "City",
+    1: "Bank",
+    2: "Res. Lab",
+    3: "House",
+    4: "Amphitheatre",
+    5: "Tower",
+    6: "Exploiter",
+    7: "Barracks",
+  };
 }
 
 export default Enums;

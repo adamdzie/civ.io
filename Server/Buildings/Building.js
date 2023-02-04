@@ -7,10 +7,25 @@ const Sender = require("../Utils/Sender.js");
 const Serializer = require("../Utils/Serializer.js");
 
 class Building {
-  constructor(ownerId, hexCord, type) {
+  constructor(
+    ownerId,
+    hexCord,
+    type,
+    goldIncome,
+    scienceIncome,
+    populationIncome,
+    amenities
+  ) {
     this.ownerId = ownerId;
     this.hexCord = hexCord;
     this.type = type;
+
+    //SET INCOME
+
+    this.goldIncome = goldIncome;
+    this.scienceIncome = scienceIncome;
+    this.populationIncome = populationIncome;
+    this.amenities = amenities;
 
     //this.hexWidth = map.map[[0, 0]].edgeLength * 2;
     //this.hexHeight = map.map[[0, 0]].h * 2;
@@ -48,6 +63,20 @@ class Building {
     //const cords = Object.assign({}, this.hexCord);
     let buffer = Serializer.BuildingComplete(this.hexCord);
     sendToAll("Building_complete", buffer);
+
+    Storage.PlayerList[this.ownerId].goldIncome += this.goldIncome;
+    if (this.goldIncome !== 0)
+      Storage.PlayerList[this.ownerId].goldIncomeChangeCallback();
+    Storage.PlayerList[this.ownerId].scienceIncome += this.scienceIncome;
+    if (this.scienceIncome !== 0)
+      Storage.PlayerList[this.ownerId].scienceIncomeChangeCallback();
+    Storage.PlayerList[this.ownerId].populationIncome += this.populationIncome;
+    if (this.populationIncome !== 0)
+      Storage.PlayerList[this.ownerId].populationIncomeChangeCallback();
+    Storage.PlayerList[this.ownerId].amenities += this.amenities;
+
+    if (this.amenities !== 0)
+      Storage.PlayerList[this.ownerId].amenitiesChangeCallback();
   }
   SendBuild() {}
   StartGrowing() {}

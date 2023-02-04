@@ -12,8 +12,9 @@ class Building {
     this.hexHeight = Grid.map[[0, 0]].h * 2;
 
     this.constructionSprite = new PIXI.Sprite(Resources.assets["Construction"]);
-
-    this.sprite = new PIXI.Sprite(Resources.assets[type]);
+    //TEMPORARY FOR ALL BUILDINGS
+    //this.sprite = new PIXI.Sprite(Resources.assets[type]);
+    this.sprite = new PIXI.Sprite(Resources.assets["City"]);
 
     this.nameSprite = new PIXI.Text(type, {
       fill: 0x000000,

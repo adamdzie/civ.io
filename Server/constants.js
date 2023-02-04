@@ -3,6 +3,8 @@
 define("TICK_RATE", 1 / 30);
 
 define("GRID_COLOR", 0x535552);
+
+define("DAY_TIME", 2000);
 //MAP GENERATION
 
 define("MAP_HEIGHT", 30);

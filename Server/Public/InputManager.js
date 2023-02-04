@@ -5,6 +5,7 @@ import UI from "./Ui.js";
 import ShowConstruction from "./ShowConstruction.js";
 import Grid from "./Grid.js";
 import Serializer from "./Utils/Serializer.js";
+import Enums from "./Utils/Enums.js";
 
 class InputManager {
   constructor() {
@@ -348,7 +349,7 @@ class InputManager {
     }
   }
   PickSlotCallback(active_slot) {
-    if (active_slot === 0) singletonInstance.showBuilding = "City";
+    singletonInstance.showBuilding = Enums.buildings[active_slot];
     singletonInstance.showMode = true;
   }
   UnpickSlotCallback() {

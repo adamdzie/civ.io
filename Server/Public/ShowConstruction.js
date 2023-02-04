@@ -11,10 +11,14 @@ class ShowConstruction {
     this.constructionAssets["City"] = Resources.assets["City_temp"];
     this.constructionAssets["City"].renderable = false;
 
+    this.constructionAssets["Bank"] = Resources.assets["City_temp"];
+    this.constructionAssets["Bank"].renderable = false;
+
     this.container = new PIXI.Container();
     this.container.zIndex = 1000;
 
     this.container.addChild(this.constructionAssets["City"]);
+    this.container.addChild(this.constructionAssets["Bank"]);
     View.Add([this.container]);
   }
   //TODO IMPROVEMENT POSSIBLE, CHANGE CONTAINER POSITION ONLY WHEN HEX IS CHANGING

@@ -2,6 +2,7 @@ const {
   socketConnection,
   onConnection,
   sendToAll,
+  sendToClient,
 } = require("./Utils/Socket-io.js");
 
 const express = require("express");
@@ -41,6 +42,8 @@ server.listen(3000, () => {
 const myTimer = new Timer(update, Constants.TICK_RATE * 1000);
 myTimer.start();
 
+const DayTimer = new Timer(UpdateDay, Constants.DAY_TIME);
+DayTimer.start();
 // TICK LOOP
 function update() {
   let time = Date.now();
@@ -75,10 +78,28 @@ function update() {
   //console.log("Czas trwania petli: ", time - Date.now());
 }
 
+function UpdateDay() {
+  for (var key in Storage.PlayerList) {
+    Storage.PlayerList[key].day_update();
+
+    let _data = Serializer.Resources(
+      Storage.PlayerList[key].gold,
+      Storage.PlayerList[key].science,
+      Storage.PlayerList[key].population
+    );
+
+    sendToClient("resources", IDManager.ids[key], _data);
+  }
+}
+
 function Receive(socket) {
   socket.on("initialize", (screenCenter) => {
     let id = IDManager.getId();
-    Storage.Add(socket.id, new Player(100, 100, 35, 5, screenCenter, id));
+    IDManager.AddPlayer(socket.id, id);
+    Storage.Add(
+      IDManager.players[socket.id],
+      new Player(100, 100, 35, 5, screenCenter, id)
+    );
 
     let _data = Serializer.Initialize(
       Grid.width,
@@ -91,9 +112,9 @@ function Receive(socket) {
 
     let _data_player = Serializer.AddPlayer(
       id,
-      Storage.PlayerList[socket.id].position.x,
-      Storage.PlayerList[socket.id].position.y,
-      Storage.PlayerList[socket.id].rotation
+      Storage.PlayerList[IDManager.players[socket.id]].position.x,
+      Storage.PlayerList[IDManager.players[socket.id]].position.y,
+      Storage.PlayerList[IDManager.players[socket.id]].rotation
     );
 
     socket.emit("initialize", _data);
@@ -102,23 +123,28 @@ function Receive(socket) {
     socket.on("movement", (m_vector) => {
       let move_vector = Deserializer.Movement(m_vector);
 
-      Storage.PlayerList[socket.id].move_vector = move_vector;
-      Storage.PlayerList[socket.id].setIsMoving();
+      Storage.PlayerList[IDManager.players[socket.id]].move_vector =
+        move_vector;
+      Storage.PlayerList[IDManager.players[socket.id]].setIsMoving();
     });
 
     socket.on("hero_rotation", (_data) => {
       let data = Deserializer.Rotation(_data);
-      Storage.PlayerList[socket.id].mouse_position = data;
-      Storage.PlayerList[socket.id].setIsRotating();
+      Storage.PlayerList[IDManager.players[socket.id]].mouse_position = data;
+      Storage.PlayerList[IDManager.players[socket.id]].setIsRotating();
     });
 
     socket.on("build", (_data) => {
       let data = Deserializer.Build(_data);
-      Storage.PlayerList[socket.id].build(data.hexCord, data.type);
+      Storage.PlayerList[IDManager.players[socket.id]].build(
+        data.hexCord,
+        data.type
+      );
     });
 
     socket.on("update_screen", (screenPosition) => {
-      Storage.PlayerList[socket.id].screenCenter = screenPosition;
+      Storage.PlayerList[IDManager.players[socket.id]].screenCenter =
+        screenPosition;
     });
     socket.on("disconnect", () => {
       console.log("disconnect");

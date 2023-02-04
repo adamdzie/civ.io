@@ -192,6 +192,35 @@ class Serializer {
 
     return buffer;
   }
+  static Resources(gold, science, population) {
+    let buffer = new ArrayBuffer(12);
+
+    let dataview = new DataView(buffer);
+
+    dataview.setInt32(0, gold);
+    dataview.setInt32(4, science);
+    dataview.setInt32(8, population);
+
+    return buffer;
+  }
+  static Amenities(amenities) {
+    let buffer = new ArrayBuffer(2);
+
+    let dataview = new DataView(buffer);
+
+    dataview.setInt16(0, amenities);
+
+    return buffer;
+  }
+  static Income(income) {
+    let buffer = new ArrayBuffer(4);
+
+    let dataview = new DataView(buffer);
+
+    dataview.setInt32(0, income);
+
+    return buffer;
+  }
 }
 
 module.exports = Serializer;
