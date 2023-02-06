@@ -18,7 +18,7 @@ class Building {
 
     this.nameSprite = new PIXI.Text(type, {
       fill: 0x000000,
-      fontSize: 20,
+      fontSize: 14,
       //fontWeight: "bold",
       //stroke: "black",
       //strokeThickness: 2.5,

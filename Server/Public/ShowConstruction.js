@@ -14,11 +14,23 @@ class ShowConstruction {
     this.constructionAssets["Bank"] = Resources.assets["City_temp"];
     this.constructionAssets["Bank"].renderable = false;
 
+    this.constructionAssets["Lab"] = Resources.assets["City_temp"];
+    this.constructionAssets["Lab"].renderable = false;
+
+    this.constructionAssets["House"] = Resources.assets["City_temp"];
+    this.constructionAssets["House"].renderable = false;
+
+    this.constructionAssets["Amphitheatre"] = Resources.assets["City_temp"];
+    this.constructionAssets["Amphitheatre"].renderable = false;
+
     this.container = new PIXI.Container();
     this.container.zIndex = 1000;
 
     this.container.addChild(this.constructionAssets["City"]);
     this.container.addChild(this.constructionAssets["Bank"]);
+    this.container.addChild(this.constructionAssets["Lab"]);
+    this.container.addChild(this.constructionAssets["House"]);
+    this.container.addChild(this.constructionAssets["Amphitheatre"]);
     View.Add([this.container]);
   }
   //TODO IMPROVEMENT POSSIBLE, CHANGE CONTAINER POSITION ONLY WHEN HEX IS CHANGING

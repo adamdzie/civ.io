@@ -136,6 +136,7 @@ function Receive(socket) {
 
     socket.on("build", (_data) => {
       let data = Deserializer.Build(_data);
+      console.log(data.type);
       Storage.PlayerList[IDManager.players[socket.id]].build(
         data.hexCord,
         data.type

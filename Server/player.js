@@ -1,5 +1,8 @@
 const City = require("./Buildings/City.js");
 const Bank = require("./Buildings/Bank.js");
+const Lab = require("./Buildings/Lab.js");
+const House = require("./Buildings/House.js");
+const Amphitheatre = require("./Buildings/Amphitheatre.js");
 const Grid = require("./Grid.js");
 const { sendToAll, sendToClient } = require("./Utils/Socket-io.js");
 const Serializer = require("./Utils/Serializer.js");
@@ -88,6 +91,15 @@ class Player {
       this.cities[[hexCord.x, hexCord.y]] = new City(this.id, hexCord);
     } else if (type === 1) {
       this.buildings[[hexCord.x, hexCord.y]] = new Bank(this.id, hexCord);
+    } else if (type === 2) {
+      this.buildings[[hexCord.x, hexCord.y]] = new Lab(this.id, hexCord);
+    } else if (type === 3) {
+      this.buildings[[hexCord.x, hexCord.y]] = new House(this.id, hexCord);
+    } else if (type === 4) {
+      this.buildings[[hexCord.x, hexCord.y]] = new Amphitheatre(
+        this.id,
+        hexCord
+      );
     }
 
     //console.log(this.buildings[[hexCord.x, hexCord.y]].hexCord);

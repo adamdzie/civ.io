@@ -31,7 +31,7 @@ class Enums {
   static buildings = {
     0: "City",
     1: "Bank",
-    2: "Res. Lab",
+    2: "Lab",
     3: "House",
     4: "Amphitheatre",
     5: "Tower",
