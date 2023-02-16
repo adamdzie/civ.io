@@ -1,4 +1,12 @@
 const Constants = require("./Constants.js");
+const SAT = require("sat");
+function checkWithRoomCollision(a, b) {
+  if (a.constructor.name === "Vector") {
+    return SAT.pointInPolygon(a, b);
+  } else {
+    return SAT.pointInPolygon(a.pos, b);
+  }
+}
 
 function existOnMap(x, y) {
   return (
@@ -159,4 +167,5 @@ module.exports = {
   getPercentageOf,
   getRing,
   getNeighbours,
+  checkWithRoomCollision,
 };

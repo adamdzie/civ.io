@@ -20,6 +20,7 @@ const Sender = require("./Utils/Sender.js");
 const Serializer = require("./Utils/Serializer.js");
 const Deserializer = require("./Utils/Deserializer.js");
 const IDManager = require("./Utils/IDManager.js");
+const CollisionSystem = require("./Collisions/CollisionSystem.js");
 const sth = { x: 5, y: -2 };
 
 socketConnection(server);
@@ -47,6 +48,7 @@ DayTimer.start();
 // TICK LOOP
 function update() {
   let time = Date.now();
+  CollisionSystem.Update();
   for (var key in Storage.PlayerList) {
     if (Storage.PlayerList[key].isMoving) {
       Storage.PlayerList[key].move();

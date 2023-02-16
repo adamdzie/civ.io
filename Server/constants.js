@@ -56,6 +56,7 @@ define("BUILDING_HEIGHT", 100);
 define("BUILD_TIME", 10);
 
 define("ID_POOL_SIZE", 1000);
+define("ID_POOL_COLLIDER_SIZE", 200000);
 function define(name, value) {
   Object.defineProperty(exports, name, {
     value: value,

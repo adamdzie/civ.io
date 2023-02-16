@@ -5,6 +5,9 @@ const { sendToAll } = require("../Utils/Socket-io.js");
 const Storage = require("../Storage.js");
 const Sender = require("../Utils/Sender.js");
 const Serializer = require("../Utils/Serializer.js");
+const IDManager = require("../Utils/IDManager.js");
+const CollisionSystem = require("../Collisions/CollisionSystem.js");
+const SAT = require("sat");
 
 class Building {
   constructor(
@@ -19,6 +22,23 @@ class Building {
     this.ownerId = ownerId;
     this.hexCord = hexCord;
     this.type = type;
+    this.colliderId = IDManager.getColliderId();
+
+    this.position = Grid.map[[hexCord.x, hexCord.y]].position;
+    this.position.x += Grid.edgeLength;
+    this.position.y += Grid.h;
+
+    console.log(this.position);
+
+    this.collider = new SAT.Polygon(
+      new SAT.Vector(this.position.x, this.position.y),
+      [
+        new SAT.Vector(this.position.x - 50, this.position.y - 50),
+        new SAT.Vector(this.position.x + 50, this.position.y - 50),
+        new SAT.Vector(this.position.x + 50, this.position.y + 50),
+        new SAT.Vector(this.position.x - 50, this.position.y + 50),
+      ]
+    );
 
     //SET INCOME
 
@@ -77,6 +97,8 @@ class Building {
 
     if (this.amenities !== 0)
       Storage.PlayerList[this.ownerId].amenitiesChangeCallback();
+
+    CollisionSystem.addStaticToRoom(this.hexCord, this);
   }
   SendBuild() {}
   StartGrowing() {}

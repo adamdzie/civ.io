@@ -1,6 +1,6 @@
 const Constants = require("./Constants.js");
 const Functions = require("./Functions.js");
-
+var SAT = require("sat");
 class Hex {
   constructor(position, edgeLength, borderWidth, hexCord) {
     this.position = position;
@@ -9,42 +9,29 @@ class Hex {
     this.borderWidth = borderWidth;
     this.h = (this.edgeLength * Math.sqrt(3)) / 2;
 
-    // this.points = [
-    //   this.position.x - this.edgeLength,
-    //   this.position.y,
-    //   this.position.x - this.edgeLength / 2,
-    //   this.position.y - this.h,
-    //   this.position.x + this.edgeLength / 2,
-    //   this.position.y - this.h,
-    //   this.position.x + this.edgeLength,
-    //   this.position.y,
-    //   this.position.x + this.edgeLength / 2,
-    //   this.position.y + this.h,
-    //   this.position.x - this.edgeLength / 2,
-    //   this.position.y + this.h,
-    // ];
-    this.points = [
-      this.position.x,
-      this.position.y + this.h,
-      this.position.x + this.edgeLength / 2,
-      this.position.y,
-      this.position.x + this.edgeLength + this.edgeLength / 2,
-      this.position.y,
-      this.position.x + this.edgeLength * 2,
-      this.position.y + this.h,
-      this.position.x + this.edgeLength + this.edgeLength / 2,
-      this.position.y + this.h * 2,
-      this.position.x + this.edgeLength / 2,
-      this.position.y + this.h * 2,
-    ];
+    this.points = this.setPoints();
 
-    if (hexCord.x === 0 && hexCord.y === 0) {
-      console.log(this.points);
-    }
-
-    //const cords = Object.assign({}, this.hexCord);
     this.neighbours = [];
 
+    this.setNeighbours();
+
+    this.collider = new SAT.Polygon(new SAT.Vector(0, 0), [
+      new SAT.Vector(this.points[0], this.points[1]),
+      new SAT.Vector(this.points[2], this.points[3]),
+      new SAT.Vector(this.points[4], this.points[5]),
+      new SAT.Vector(this.points[6], this.points[7]),
+      new SAT.Vector(this.points[8], this.points[9]),
+      new SAT.Vector(this.points[10], this.points[11]),
+    ]);
+
+    this.terrainType = "grass";
+    this.terrainObstacle = "none";
+    this.terrainResource = "none";
+    this.building = "none";
+    this.hexOwner = 0;
+  }
+
+  setNeighbours() {
     //EVEN
     if (this.hexCord.x % 2 === 0) {
       if (Functions.existOnMap(this.hexCord.x - 1, this.hexCord.y - 1))
@@ -109,13 +96,38 @@ class Hex {
         this.neighbours.push({ x: this.hexCord.x - 1, y: this.hexCord.y + 1 });
       else this.neighbours.push("none");
     }
-
-    this.terrainType = "grass";
-    this.terrainObstacle = "none";
-    this.terrainResource = "none";
-    this.building = "none";
-    this.hexOwner = 0;
+  }
+  setPoints() {
+    return [
+      this.position.x,
+      this.position.y + this.h,
+      this.position.x + this.edgeLength / 2,
+      this.position.y,
+      this.position.x + this.edgeLength + this.edgeLength / 2,
+      this.position.y,
+      this.position.x + this.edgeLength * 2,
+      this.position.y + this.h,
+      this.position.x + this.edgeLength + this.edgeLength / 2,
+      this.position.y + this.h * 2,
+      this.position.x + this.edgeLength / 2,
+      this.position.y + this.h * 2,
+    ];
   }
 }
 
 module.exports = Hex;
+
+// this.points = [
+//   this.position.x - this.edgeLength,
+//   this.position.y,
+//   this.position.x - this.edgeLength / 2,
+//   this.position.y - this.h,
+//   this.position.x + this.edgeLength / 2,
+//   this.position.y - this.h,
+//   this.position.x + this.edgeLength,
+//   this.position.y,
+//   this.position.x + this.edgeLength / 2,
+//   this.position.y + this.h,
+//   this.position.x - this.edgeLength / 2,
+//   this.position.y + this.h,
+// ];

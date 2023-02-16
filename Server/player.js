@@ -7,6 +7,10 @@ const Grid = require("./Grid.js");
 const { sendToAll, sendToClient } = require("./Utils/Socket-io.js");
 const Serializer = require("./Utils/Serializer.js");
 const IDManager = require("./Utils/IDManager.js");
+const CollisionSystem = require("./Collisions/CollisionSystem.js");
+
+const SAT = require("sat");
+
 class Player {
   constructor(_x, _y, radius, move_speed, screenCenter, id) {
     this.initiated = false;
@@ -22,6 +26,12 @@ class Player {
     this.lastAngle = this.rotation;
     this.rotationThreshold = 0.1;
     this.screenCenter = { x: screenCenter.x, y: screenCenter.y };
+
+    this.colliderId = IDManager.getColliderId();
+
+    this.collider = new SAT.Vector(this.position.x, this.position.y);
+
+    CollisionSystem.addToRoom({ x: 0, y: 0 }, this);
 
     this.gold = 0;
     this.goldIncome = 0;
@@ -54,6 +64,9 @@ class Player {
     }
     this.position.x += this.move_vector.x * this.move_speed;
     this.position.y += this.move_vector.y * this.move_speed;
+
+    this.collider.x = this.position.x;
+    this.collider.y = this.position.y;
   }
   rotate() {
     //console.log("MOUSE POS: " + this.mouse_position.x);
