@@ -8,6 +8,7 @@ const { sendToAll, sendToClient } = require("./Utils/Socket-io.js");
 const Serializer = require("./Utils/Serializer.js");
 const IDManager = require("./Utils/IDManager.js");
 const CollisionSystem = require("./Collisions/CollisionSystem.js");
+const Functions = require("./Functions.js");
 
 const SAT = require("sat");
 
@@ -26,6 +27,7 @@ class Player {
     this.lastAngle = this.rotation;
     this.rotationThreshold = 0.1;
     this.screenCenter = { x: screenCenter.x, y: screenCenter.y };
+    this.lastPosition = this.position;
 
     this.colliderId = IDManager.getColliderId();
 
@@ -62,11 +64,15 @@ class Player {
       this.isMoving = false;
       return;
     }
+
+    this.lastPosition = { ...this.position };
+
     this.position.x += this.move_vector.x * this.move_speed;
     this.position.y += this.move_vector.y * this.move_speed;
 
     this.collider.x = this.position.x;
     this.collider.y = this.position.y;
+    //console.log("PX: " + this.collider.x + " PY: " + this.collider.y);
   }
   rotate() {
     //console.log("MOUSE POS: " + this.mouse_position.x);
@@ -101,7 +107,8 @@ class Player {
   build(hexCord, type) {
     Grid.map[[hexCord.x, hexCord.y]].building = type;
     if (type === 0) {
-      this.cities[[hexCord.x, hexCord.y]] = new City(this.id, hexCord);
+      if (Grid.map[[hexCord.x, hexCord.y]].canBuildCity)
+        this.cities[[hexCord.x, hexCord.y]] = new City(this.id, hexCord);
     } else if (type === 1) {
       this.buildings[[hexCord.x, hexCord.y]] = new Bank(this.id, hexCord);
     } else if (type === 2) {
@@ -132,6 +139,57 @@ class Player {
   populationIncomeChangeCallback() {
     let _data = Serializer.Income(this.populationIncome);
     sendToClient("populationIncome", IDManager.ids[this.id], _data);
+  }
+  IsCollide(obj) {
+    //console.log(obj);
+    if (!obj.allowMove) {
+      this.position = { ...this.lastPosition };
+      this.collider.x = this.position.x;
+      this.collider.y = this.position.y;
+
+      console.log("BEF X: " + this.position.x);
+      console.log("BEF Y: " + this.position.y);
+
+      let factor = Grid.h / (Grid.edgeLength / 2);
+
+      this.position.x += (this.move_vector.x * this.move_speed) / factor;
+      this.position.y += this.move_vector.y * this.move_speed;
+      this.collider.x = this.position.x;
+      this.collider.y = this.position.y;
+
+      console.log("AFT X: " + this.position.x);
+      console.log("AFT Y: " + this.position.y);
+
+      if (!Functions.checkCollision(this.collider, obj.collider)) {
+        return;
+      }
+
+      this.position = { ...this.lastPosition };
+      this.collider.x = this.position.x;
+      this.collider.y = this.position.y;
+
+      this.position.x += this.move_vector.x * this.move_speed;
+
+      this.collider.x = this.position.x;
+      if (!Functions.checkCollision(this.collider, obj.collider)) {
+        return;
+      }
+      this.position = { ...this.lastPosition };
+
+      this.collider.x = this.position.x;
+      this.collider.y = this.position.y;
+
+      this.position.y += this.move_vector.y * this.move_speed;
+      this.collider.y = this.position.y;
+
+      if (!Functions.checkCollision(this.collider, obj.collider)) {
+        return;
+      }
+
+      this.position = { ...this.lastPosition };
+      this.collider.x = this.position.x;
+      this.collider.y = this.position.y;
+    }
   }
 }
 

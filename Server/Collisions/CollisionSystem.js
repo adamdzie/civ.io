@@ -1,3 +1,5 @@
+//NOTE: MAY BY UPGRADED TO AABB TREE
+
 const Grid = require("../Grid.js");
 const CollisionRoom = require("./CollisionRoom.js");
 const SAT = require("sat");
@@ -14,6 +16,7 @@ class CollisionSystem {
           Grid.map[[i, j]].neighbours,
           Grid.map[[i, j]].collider
         );
+        this.addStaticToRoom({ x: i, y: j }, Grid.map[[i, j]]);
       }
     }
   }
@@ -21,7 +24,10 @@ class CollisionSystem {
     let time1 = Date.now();
     this.CheckObjectsInRooms();
     this.GetPossibleCollisions();
+    this.CheckCollisions();
     let time2 = Date.now();
+
+    //console.log("TIME: " + (time2 - time1));
   }
   addToRoom(roomCord, obj) {
     this.collisionRooms[[roomCord.x, roomCord.y]].active_room = true;
@@ -86,6 +92,9 @@ class CollisionSystem {
     this.room_checked = {};
     for (let key in this.active_rooms) {
       for (let s_key in this.collisionRooms[key].objects) {
+        // this.collisionRooms[key].objects[s_key].IsCollide(
+        //   this.collisionRooms[key].hex
+        // );
         for (let local_key in this.collisionRooms[key].objects) {
           if (local_key === s_key) continue;
 
@@ -139,7 +148,7 @@ class CollisionSystem {
                 } else {
                   this.pairs_to_check[[s_key, local_key]] = {
                     obj_1:
-                      this.collisionRooms[(cord.x, cord.y)].objects[local_key],
+                      this.collisionRooms[[cord.x, cord.y]].objects[local_key],
                     obj_2: this.collisionRooms[key].objects[s_key],
                   };
                 }
@@ -169,6 +178,23 @@ class CollisionSystem {
         }
       }
       this.room_checked[key] = true;
+    }
+  }
+  CheckCollisions() {
+    for (let key in this.pairs_to_check) {
+      if (
+        Functions.checkCollision(
+          this.pairs_to_check[key].obj_1.collider,
+          this.pairs_to_check[key].obj_2.collider
+        )
+      ) {
+        this.pairs_to_check[key].obj_1.IsCollide(
+          this.pairs_to_check[key].obj_2
+        );
+        this.pairs_to_check[key].obj_2.IsCollide(
+          this.pairs_to_check[key].obj_1
+        );
+      }
     }
   }
 }

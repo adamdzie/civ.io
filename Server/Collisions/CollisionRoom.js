@@ -5,6 +5,7 @@ class CollisionRoom {
     this.active_room = false;
     this.neighbours = neighbours;
     this.collider = collider;
+    //this.hex = hex;
     this.objects = {};
     this.static_objects = {};
   }

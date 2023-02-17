@@ -1,6 +1,7 @@
 const Constants = require("./Constants.js");
 const Functions = require("./Functions.js");
 var SAT = require("sat");
+const IDManager = require("./Utils/IDManager.js");
 class Hex {
   constructor(position, edgeLength, borderWidth, hexCord) {
     this.position = position;
@@ -8,6 +9,7 @@ class Hex {
     this.edgeLength = edgeLength;
     this.borderWidth = borderWidth;
     this.h = (this.edgeLength * Math.sqrt(3)) / 2;
+    this.canBuildCity = true;
 
     this.points = this.setPoints();
 
@@ -25,10 +27,12 @@ class Hex {
     ]);
 
     this.terrainType = "grass";
+    this.allowMove = true;
     this.terrainObstacle = "none";
     this.terrainResource = "none";
     this.building = "none";
     this.hexOwner = 0;
+    this.colliderId = IDManager.getColliderId();
   }
 
   setNeighbours() {
@@ -113,6 +117,16 @@ class Hex {
       this.position.y + this.h * 2,
     ];
   }
+  allowToMove() {
+    if (
+      this.terrainType === "ocean" ||
+      this.terrainType === "mountain" ||
+      this.terrainType === "lake"
+    ) {
+      this.allowMove = false;
+    }
+  }
+  IsCollide() {}
 }
 
 module.exports = Hex;

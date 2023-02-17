@@ -24,6 +24,7 @@ class City extends Building {
     this.ownedHexes.forEach((hex) => {
       Grid.map[[hex.x, hex.y]].hexOwner = this.ownerId;
     });
+    this.MarkNotAbleCityHexes();
     this.initialize();
     this.StartGrowing();
   }
@@ -79,6 +80,12 @@ class City extends Building {
         this._cityGrow = null;
       }
     }, this.time_growth);
+  }
+  MarkNotAbleCityHexes() {
+    let neighbours = Functions.getNeighbours(this.hexCord, 3);
+    neighbours.forEach((hexCord) => {
+      Grid.map[[hexCord.x, hexCord.y]].canBuildCity = false;
+    });
   }
 }
 

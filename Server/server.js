@@ -48,18 +48,14 @@ DayTimer.start();
 // TICK LOOP
 function update() {
   let time = Date.now();
-  CollisionSystem.Update();
+
+  // UPDATE LOOP
   for (var key in Storage.PlayerList) {
     if (Storage.PlayerList[key].isMoving) {
       Storage.PlayerList[key].move();
       time = Date.now();
       //console.log(time);
-      let _data = Serializer.Movement(
-        Storage.PlayerList[key].id,
-        time,
-        Storage.PlayerList[key].position
-      );
-      sendToAll("movement", _data);
+
       //io.emit("movement", key, time, Storage.PlayerList[key].position);
     }
 
@@ -67,14 +63,37 @@ function update() {
       Storage.PlayerList[key].rotate();
       time = Date.now();
 
-      let _data = Serializer.Rotation(
-        Storage.PlayerList[key].id,
-        time,
-        Storage.PlayerList[key].rotation
-      );
-      sendToAll("hero_rotation", _data);
+      // let _data = Serializer.Rotation(
+      //   Storage.PlayerList[key].id,
+      //   time,
+      //   Storage.PlayerList[key].rotation
+      // );
+      // sendToAll("hero_rotation", _data);
       //io.emit("hero_rotation", key, time, Storage.PlayerList[key].rotation);
     }
+  }
+  //CHECKING COLLISION
+
+  CollisionSystem.Update();
+
+  // SENDING LOOP
+  for (var key in Storage.PlayerList) {
+    let time = Date.now();
+
+    let _data = Serializer.Movement(
+      Storage.PlayerList[key].id,
+      time,
+      Storage.PlayerList[key].position
+    );
+    sendToAll("movement", _data);
+
+    _data = Serializer.Rotation(
+      Storage.PlayerList[key].id,
+      time,
+      Storage.PlayerList[key].rotation
+    );
+
+    sendToAll("hero_rotation", _data);
   }
   //Sender.execute();
   //console.log("Czas trwania petli: ", time - Date.now());

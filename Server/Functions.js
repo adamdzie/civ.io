@@ -7,6 +7,22 @@ function checkWithRoomCollision(a, b) {
     return SAT.pointInPolygon(a.pos, b);
   }
 }
+function checkCollision(a, b) {
+  //console.log(a);
+  //console.log(b);
+  if (a.constructor.name === "Vector" && b.constructor.name === "Polygon") {
+    //console.log("OPTION ONE");
+    return SAT.pointInPolygon(a, b);
+  }
+  if (a.constructor.name === "Polygon" && b.constructor.name === "Vector") {
+    //console.log("OPTION TWO");
+    return SAT.pointInPolygon(b, a);
+  }
+  if (a.constructor.name === "Polygon" && b.constructor.name === "Polygon") {
+    let response = new SAT.Response();
+    return SAT.testPolygonPolygon(a, b, response);
+  }
+}
 
 function existOnMap(x, y) {
   return (
@@ -168,4 +184,5 @@ module.exports = {
   getRing,
   getNeighbours,
   checkWithRoomCollision,
+  checkCollision,
 };

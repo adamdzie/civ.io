@@ -345,6 +345,12 @@ class Grid {
         }
       }
     }
+
+    for (let i = 0; i < Constants.MAP_HEIGHT; i++) {
+      for (let j = 0; j < Constants.MAP_WIDTH; j++) {
+        this.map[[i, j]].allowToMove();
+      }
+    }
   }
 
   findTerrainNeighborhood(terrainType, hexPosition, distance) {

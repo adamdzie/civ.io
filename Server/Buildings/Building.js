@@ -28,15 +28,24 @@ class Building {
     this.position.x += Grid.edgeLength;
     this.position.y += Grid.h;
 
+    this.allowMove = false;
+
     console.log(this.position);
+
+    // this.collider = new SAT.Polygon(new SAT.Vector(this.position.x, this.position.y), [
+    //   new SAT.Vector(this.position.x - 50, this.position.y - 50),
+    //   new SAT.Vector(this.position.x + 50, this.position.y - 50),
+    //   new SAT.Vector(this.position.x + 50, this.position.y + 50),
+    //   new SAT.Vector(this.position.x - 50, this.position.y + 50),
+    // ]);
 
     this.collider = new SAT.Polygon(
       new SAT.Vector(this.position.x, this.position.y),
       [
-        new SAT.Vector(this.position.x - 50, this.position.y - 50),
-        new SAT.Vector(this.position.x + 50, this.position.y - 50),
-        new SAT.Vector(this.position.x + 50, this.position.y + 50),
-        new SAT.Vector(this.position.x - 50, this.position.y + 50),
+        new SAT.Vector(-50, -50),
+        new SAT.Vector(50, -50),
+        new SAT.Vector(50, 50),
+        new SAT.Vector(-50, 50),
       ]
     );
 
@@ -102,6 +111,7 @@ class Building {
   }
   SendBuild() {}
   StartGrowing() {}
+  IsCollide(obj) {}
 }
 
 module.exports = Building;
