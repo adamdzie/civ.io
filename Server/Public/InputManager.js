@@ -358,10 +358,14 @@ class InputManager {
   }
   ShowMode() {
     this.SelectHex();
-    ShowConstruction.Show(this.showBuilding, {
-      x: this.selectedHex.container.position.x + Grid.edgeLength,
-      y: this.selectedHex.container.position.y + Grid.h,
-    });
+    ShowConstruction.Show(
+      this.showBuilding,
+      {
+        x: this.selectedHex.container.position.x + Grid.edgeLength,
+        y: this.selectedHex.container.position.y + Grid.h,
+      },
+      this.selectedHex.hexCord
+    );
   }
 }
 

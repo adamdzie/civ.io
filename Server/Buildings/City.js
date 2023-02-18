@@ -82,7 +82,10 @@ class City extends Building {
     }, this.time_growth);
   }
   MarkNotAbleCityHexes() {
-    let neighbours = Functions.getNeighbours(this.hexCord, 3);
+    let neighbours = Functions.getNeighbours(
+      Object.assign({}, this.hexCord),
+      3
+    );
     neighbours.forEach((hexCord) => {
       Grid.map[[hexCord.x, hexCord.y]].canBuildCity = false;
     });

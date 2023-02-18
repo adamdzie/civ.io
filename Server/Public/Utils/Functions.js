@@ -42,11 +42,11 @@ function getPercentageOf(number, of) {
   return Math.round((number / of) * 1000) / 10;
 }
 
-function getNeighbours(hexCord, range) {
-  neighbours = [];
+export function getNeighbours(hexCord, range) {
+  let neighbours = [];
 
   for (let i = 1; i <= range; i++) {
-    neighbours = neighbours.concat(getRing(hexCord, i));
+    neighbours = neighbours.concat(getRing(Object.assign({}, hexCord), i));
   }
 
   return neighbours;
@@ -56,7 +56,7 @@ export function getRing(hexCord, range) {
   let odd = hexCord.x % 2 !== 0;
 
   let neighbours = [];
-
+  //console.log(range);
   if (range === 1) {
     if (odd) {
       if (existOnMap(hexCord.x - 1, hexCord.y + 1))
@@ -99,6 +99,9 @@ export function getRing(hexCord, range) {
   if (odd) switchY = 2;
   else switchY = 1;
 
+  // console.log("Switch " + switchY);
+  // console.log(hexCord);
+
   //SET POINTER ON LEFT DOWN HEX OF RING
 
   for (let i = 1; i <= range; i++) {
@@ -110,6 +113,10 @@ export function getRing(hexCord, range) {
     switchY++;
   }
 
+  // if (range === 3) {
+  //   console.log("ON RANGE " + range);
+  //   console.log(pointer);
+  // }
   //GET HEXES ON LEFT EDGE
   let leftEdge = [];
   for (let i = 0; i < range + 1; i++) {
@@ -177,6 +184,12 @@ export function getRing(hexCord, range) {
   }
 
   neighbours = neighbours.filter(Object);
+  if (range === 3) {
+    console.log("RING x: " + hexCord.x + " y: " + hexCord.y);
+    console.log("RANGE: " + range);
+
+    console.log(neighbours);
+  }
 
   return neighbours;
 }

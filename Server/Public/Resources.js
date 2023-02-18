@@ -95,6 +95,17 @@ class Resources {
 
     this.assets["City_temp"] = new PIXI.Sprite(texture);
 
+    let grap1 = new PIXI.Graphics();
+    grap1
+      .beginFill(0xef1a14, 0.2)
+      .lineStyle(3, 0x000000, 0.2)
+      .drawRect(0, 0, 100, 100)
+      .endFill();
+
+    let texture1 = app.renderer.generateTexture(grap1);
+
+    this.assets["Forbidden"] = new PIXI.Sprite(texture1);
+
     let grap2 = new PIXI.Graphics();
     grap2
       .beginFill(0x42b7df, 1)

@@ -39,10 +39,10 @@ function getPercentageOf(number, of) {
 }
 
 function getNeighbours(hexCord, range) {
-  neighbours = [];
+  let neighbours = [];
 
   for (let i = 1; i <= range; i++) {
-    neighbours = neighbours.concat(getRing(hexCord, i));
+    neighbours = neighbours.concat(getRing(Object.assign({}, hexCord), i));
   }
 
   return neighbours;

@@ -3,6 +3,7 @@
 import Building from "./Building.js";
 import Grid from "../Grid.js";
 import Storage from "../Storage.js";
+import { getNeighbours } from "../Utils/Functions.js";
 class City extends Building {
   constructor(ownerId, hexCord, isBuilt, ownedHexes) {
     super(ownerId, hexCord, "City", isBuilt);
@@ -25,6 +26,7 @@ class City extends Building {
       Grid.map[[hex.x, hex.y]].drawBorders();
       Grid.map[[hex.x, hex.y]].updateNeighbours();
     });
+    this.markNotAbleCityHexes();
   }
   grow(growHexCord) {
     super.grow();
@@ -32,6 +34,14 @@ class City extends Building {
     //Grid.map[[growHexCord.x, growHexCord.y]].displayHexOwnage();
     Grid.map[[growHexCord.x, growHexCord.y]].drawBorders();
     Grid.map[[growHexCord.x, growHexCord.y]].updateNeighbours();
+  }
+  markNotAbleCityHexes() {
+    let neighbours = getNeighbours(Object.assign({}, this.hexCord), 3);
+
+    neighbours.forEach((hex) => {
+      //console.log(hex);
+      Grid.map[[hex.x, hex.y]].canBuildCity = false;
+    });
   }
 }
 

@@ -34,6 +34,7 @@ export class Hex {
     this.building = "none";
 
     this.neighbours = [];
+    this.canBuildCity = true;
 
     //EVEN
     if (this.hexCord.x % 2 === 0) {

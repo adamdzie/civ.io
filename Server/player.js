@@ -147,9 +147,6 @@ class Player {
       this.collider.x = this.position.x;
       this.collider.y = this.position.y;
 
-      console.log("BEF X: " + this.position.x);
-      console.log("BEF Y: " + this.position.y);
-
       let factor = Grid.h / (Grid.edgeLength / 2);
 
       this.position.x += (this.move_vector.x * this.move_speed) / factor;

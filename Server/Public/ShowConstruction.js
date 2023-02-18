@@ -1,6 +1,8 @@
 import { Graphics, Text, app, Container } from "./App.js";
 import Resources from "./Resources.js";
 import View from "./View.js";
+import Grid from "./Grid.js";
+import { socket_id } from "./App.js";
 
 class ShowConstruction {
   constructor() {}
@@ -23,6 +25,9 @@ class ShowConstruction {
     this.constructionAssets["Amphitheatre"] = Resources.assets["City_temp"];
     this.constructionAssets["Amphitheatre"].renderable = false;
 
+    this.constructionAssets["Forbidden"] = Resources.assets["Forbidden"];
+    this.constructionAssets["Forbidden"].renderable = false;
+
     this.container = new PIXI.Container();
     this.container.zIndex = 1000;
 
@@ -31,10 +36,11 @@ class ShowConstruction {
     this.container.addChild(this.constructionAssets["Lab"]);
     this.container.addChild(this.constructionAssets["House"]);
     this.container.addChild(this.constructionAssets["Amphitheatre"]);
+    this.container.addChild(this.constructionAssets["Forbidden"]);
     View.Add([this.container]);
   }
   //TODO IMPROVEMENT POSSIBLE, CHANGE CONTAINER POSITION ONLY WHEN HEX IS CHANGING
-  Show(construction, hexPosition) {
+  Show(construction, hexPosition, hexCord) {
     if (
       construction !== "none" &&
       this.currentConstruction !== "none" &&
@@ -42,12 +48,30 @@ class ShowConstruction {
     )
       this.constructionAssets[this.currentConstruction].renderable = false;
 
-    this.currentConstruction = construction;
-    this.constructionAssets[construction].renderable = true;
+    if (construction === "City") {
+      if (Grid.map[[hexCord.x, hexCord.y]].canBuildCity)
+        this.currentConstruction = construction;
+      else {
+        //this.constructionAssets[this.currentConstruction].renderable = false;
+        this.currentConstruction = "Forbidden";
+      }
+    } else {
+      if (Grid.map[[hexCord.x, hexCord.y]].hexOwner === socket_id)
+        this.currentConstruction = construction;
+      else {
+        //this.constructionAssets[this.currentConstruction].renderable = false;
+        this.currentConstruction = "Forbidden";
+      }
+    }
+    console.log(this.currentConstruction);
+    //this.currentConstruction = construction;
+    this.constructionAssets[this.currentConstruction].renderable = true;
     this.container.x =
-      hexPosition.x - this.constructionAssets[construction].width / 2;
+      hexPosition.x -
+      this.constructionAssets[this.currentConstruction].width / 2;
     this.container.y =
-      hexPosition.y - this.constructionAssets[construction].height / 2;
+      hexPosition.y -
+      this.constructionAssets[this.currentConstruction].height / 2;
   }
   DisableShow() {
     if (this.currentConstruction !== "none") {
