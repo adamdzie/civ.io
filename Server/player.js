@@ -154,9 +154,6 @@ class Player {
       this.collider.x = this.position.x;
       this.collider.y = this.position.y;
 
-      console.log("AFT X: " + this.position.x);
-      console.log("AFT Y: " + this.position.y);
-
       if (!Functions.checkCollision(this.collider, obj.collider)) {
         return;
       }

@@ -71,14 +71,7 @@ class CollisionSystem {
                   key,
                   this.collisionRooms[key].objects[s_key]
                 );
-                console.log(
-                  "OBJECT ID: " +
-                    s_key +
-                    " TRANSFER TO: " +
-                    cord.x +
-                    ", " +
-                    cord.y
-                );
+
                 break;
               }
             }

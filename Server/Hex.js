@@ -2,6 +2,7 @@ const Constants = require("./Constants.js");
 const Functions = require("./Functions.js");
 var SAT = require("sat");
 const IDManager = require("./Utils/IDManager.js");
+const NeighbourBonus = require("./NeighbourBonus.js");
 class Hex {
   constructor(position, edgeLength, borderWidth, hexCord) {
     this.position = position;
@@ -33,6 +34,7 @@ class Hex {
     this.building = "none";
     this.hexOwner = 0;
     this.colliderId = IDManager.getColliderId();
+    this.neighbourBonus = "none";
   }
 
   setNeighbours() {
@@ -127,21 +129,12 @@ class Hex {
     }
   }
   IsCollide() {}
+  createNeighbourBonus() {
+    this.neighbourBonus = new NeighbourBonus(
+      this.terrainResource,
+      this.terrainType
+    );
+  }
 }
 
 module.exports = Hex;
-
-// this.points = [
-//   this.position.x - this.edgeLength,
-//   this.position.y,
-//   this.position.x - this.edgeLength / 2,
-//   this.position.y - this.h,
-//   this.position.x + this.edgeLength / 2,
-//   this.position.y - this.h,
-//   this.position.x + this.edgeLength,
-//   this.position.y,
-//   this.position.x + this.edgeLength / 2,
-//   this.position.y + this.h,
-//   this.position.x - this.edgeLength / 2,
-//   this.position.y + this.h,
-// ];

@@ -351,6 +351,8 @@ class Grid {
         this.map[[i, j]].allowToMove();
       }
     }
+
+    this.createNeighbourBonus();
   }
 
   findTerrainNeighborhood(terrainType, hexPosition, distance) {
@@ -406,6 +408,34 @@ class Grid {
 
     if (distance > 1) {
       //TODO FIND TERRAIN WHEN DISTANCE > 1
+    }
+  }
+
+  createNeighbourBonus() {
+    //Creating neighbour bonus
+    for (let i = 0; i < this.width; i++) {
+      for (let j = 0; j < this.height; j++) {
+        this.map[[i, j]].createNeighbourBonus();
+      }
+    }
+    //Setting neighbour bonus
+    for (let i = 0; i < this.width; i++) {
+      for (let j = 0; j < this.height; j++) {
+        this.map[[i, j]].neighbours.forEach((_hexCord) => {
+          if (_hexCord !== "none") {
+            for (let key in Constants.RESOURCE_BONUS[
+              this.map[[i, j]].neighbourBonus.resourceName
+            ]) {
+              for (let res_key in Constants.RESOURCE_BONUS[key]) {
+                this.map[_hexCord].neighbourBonus.forBuilding[key][res_key] +=
+                  Constants.RESOURCE_BONUS[
+                    this.map[[i, j]].neighbourBonus.resourceName
+                  ][key][res_key];
+              }
+            }
+          }
+        });
+      }
     }
   }
 }

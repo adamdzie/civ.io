@@ -21,7 +21,17 @@ const Serializer = require("./Utils/Serializer.js");
 const Deserializer = require("./Utils/Deserializer.js");
 const IDManager = require("./Utils/IDManager.js");
 const CollisionSystem = require("./Collisions/CollisionSystem.js");
-const sth = { x: 5, y: -2 };
+
+// for (let i = 0; i < Grid.width; i++) {
+//   for (let j = 0; j < Grid.height; j++) {
+//     Grid.map[[i, j]].createNeighbourBonus();
+//   }
+// }
+// for (let i = 0; i < Grid.width; i++) {
+//   for (let j = 0; j < Grid.height; j++) {
+//     Grid.map[[i, j]].executeNeighbourBonus();
+//   }
+// }
 
 socketConnection(server);
 
@@ -119,7 +129,7 @@ function Receive(socket) {
     IDManager.AddPlayer(socket.id, id);
     Storage.Add(
       IDManager.players[socket.id],
-      new Player(100, 100, 35, 5, screenCenter, id)
+      new Player(100, 100, 35, 20, screenCenter, id)
     );
 
     let _data = Serializer.Initialize(

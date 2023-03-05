@@ -7,6 +7,7 @@ const Sender = require("../Utils/Sender.js");
 const Serializer = require("../Utils/Serializer.js");
 const IDManager = require("../Utils/IDManager.js");
 const CollisionSystem = require("../Collisions/CollisionSystem.js");
+const Enums = require("../Utils/Enums.js");
 const SAT = require("sat");
 
 class Building {
@@ -54,6 +55,7 @@ class Building {
     this.goldIncome = goldIncome;
     this.scienceIncome = scienceIncome;
     this.populationIncome = populationIncome;
+    this.populationLimit = 0;
     this.amenities = amenities;
 
     //this.hexWidth = map.map[[0, 0]].edgeLength * 2;
@@ -88,7 +90,7 @@ class Building {
   }
   BuildingComplete() {
     this.isBuilt = true;
-
+    this.GetNeighbourBonus();
     //const cords = Object.assign({}, this.hexCord);
     let buffer = Serializer.BuildingComplete(this.hexCord);
     sendToAll("Building_complete", buffer);
@@ -112,6 +114,30 @@ class Building {
   SendBuild() {}
   StartGrowing() {}
   IsCollide(obj) {}
+  GetNeighbourBonus() {
+    if (Grid.map[[this.hexCord.x, this.hexCord.y]].neighbourBonus !== "none") {
+      this.goldIncome +=
+        Grid.map[[this.hexCord.x, this.hexCord.y]].neighbourBonus.forBuilding[
+          Enums.buildings[this.type]
+        ].Gold;
+      this.scienceIncome +=
+        Grid.map[[this.hexCord.x, this.hexCord.y]].neighbourBonus.forBuilding[
+          Enums.buildings[this.type]
+        ].Science;
+      this.populationIncome += this.scienceIncome +=
+        Grid.map[[this.hexCord.x, this.hexCord.y]].neighbourBonus.forBuilding[
+          Enums.buildings[this.type]
+        ].Population;
+      this.populationLimit += this.scienceIncome +=
+        Grid.map[[this.hexCord.x, this.hexCord.y]].neighbourBonus.forBuilding[
+          Enums.buildings[this.type]
+        ].PopulationLimit;
+      this.amenities += this.scienceIncome +=
+        Grid.map[[this.hexCord.x, this.hexCord.y]].neighbourBonus.forBuilding[
+          Enums.buildings[this.type]
+        ].Amenities;
+    }
+  }
 }
 
 module.exports = Building;

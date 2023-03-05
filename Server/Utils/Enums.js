@@ -22,6 +22,16 @@ class Enums {
     Marble: 17,
     Sulfur: 18,
   };
+  static buildings = {
+    0: "City",
+    1: "Bank",
+    2: "Lab",
+    3: "House",
+    4: "Amphitheatre",
+    5: "Tower",
+    6: "Exploiter",
+    7: "Barracks",
+  };
 }
 
 module.exports = Enums;
